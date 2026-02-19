@@ -114,8 +114,7 @@ public class MenuScreen implements Screen {
             fonteTitulo.draw(batch, textoMenu, menuX, 200);
 
             if (Gdx.input.isKeyPressed((Input.Keys.ENTER))){
-                musicMenu.stop();
-                game.setScreen(new SelecaoCapitulo(game));
+                game.setScreen(new SelecaoCapitulo(game, musicMenu));
             }
         }
         batch.end();
@@ -147,6 +146,4 @@ public class MenuScreen implements Screen {
         batch.dispose();
         fundoMenu.dispose();
     }
-
-
 }

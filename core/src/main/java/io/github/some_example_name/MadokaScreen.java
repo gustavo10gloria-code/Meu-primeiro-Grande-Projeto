@@ -62,8 +62,8 @@ public class MadokaScreen implements Screen {
         caxaDialogo = new Texture("UI/caixaDialogo.png");
         backgroundMadoka = new Texture[3];
         backgroundMadoka[0] = new Texture("Backgrounds/Madoka.png"); // Cidade
-        backgroundMadoka[1] = new Texture("Backgrounds/0000.png"); // Castelo
-        backgroundMadoka[2] = new Texture("Backgrounds/0000.png"); // Floresta
+        backgroundMadoka[1] = new Texture("Backgrounds/MadokaCastelo.png"); // Castelo
+        backgroundMadoka[2] = new Texture("Backgrounds/MadokaFloresta.png"); // Floresta
         enioFrente = new Texture[2];
         enioFrente[0] = new Texture("Enio/EnioFrente.png");
         enioFrente[1] = new Texture("Enio/EnioFrentef.png");
@@ -80,7 +80,7 @@ public class MadokaScreen implements Screen {
         eniolado2[2] = new Texture("Enio/Enioladol1.png");
         enioAtual = enioFrente[frameAtual];
         //Musicas
-        MadokaMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/0000.mp3")); //Mudar aqui dps
+        MadokaMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/MadokaMusic.mp3")); //Mudar aqui dps
         MadokaMusic.setLooping(true);
         lojaMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/Lojas.mp3"));
         lojaMusic.setLooping(true);
@@ -219,60 +219,60 @@ public class MadokaScreen implements Screen {
         }
     }
 
-private void desenharCaixaDialogo() {
-    if (exibindoDialogo) {
-        batch.draw(caxaDialogo, 160, 40, 1600, 250);
-        //Pro jogo n bugar, eu crio esse if temporario pra decidir quais falar amostrar
-        String[] falasAtuais = new String[3];
-        if (estadoHistoria == 0) falasAtuais = falasEntrada;
-        if (estadoHistoria == 2) falasAtuais = falasLoja;
-        // if (estadoHistoria == 3) falasAtuais = falasFinais;
+    private void desenharCaixaDialogo() {
+        if (exibindoDialogo) {
+            batch.draw(caxaDialogo, 160, 40, 1600, 250);
+            //Pro jogo n bugar, eu crio esse if temporario pra decidir quais falar amostrar
+            String[] falasAtuais = new String[3];
+            if (estadoHistoria == 0) falasAtuais = falasEntrada;
+            if (estadoHistoria == 2) falasAtuais = falasLoja;
+            // if (estadoHistoria == 3) falasAtuais = falasFinais;
 
-        if (falaIndice < falasAtuais.length) {
-            String[] partes = falasAtuais[falaIndice].split(": ");
-            if (partes.length >= 2) {
-                String nome = partes[0];
-                String mensagem = partes[1];
-                if (nome.equals("Enio")) {
-                    fonte.setColor(Color.BROWN);
-                } else if (nome.equals("Narrador")) {
-                    fonte.setColor(Color.CYAN);
-                    /**} else if (nome.equals("Bandido Paripe")) {
-                     fonte.setColor(Color.DARK_GRAY);*/
-                } else {
-                    fonte.setColor(Color.YELLOW);
+            if (falaIndice < falasAtuais.length) {
+                String[] partes = falasAtuais[falaIndice].split(": ");
+                if (partes.length >= 2) {
+                    String nome = partes[0];
+                    String mensagem = partes[1];
+                    if (nome.equals("Enio")) {
+                        fonte.setColor(Color.BROWN);
+                    } else if (nome.equals("Narrador")) {
+                        fonte.setColor(Color.CYAN);
+                        /**} else if (nome.equals("Bandido Paripe")) {
+                         fonte.setColor(Color.DARK_GRAY);*/
+                    } else {
+                        fonte.setColor(Color.YELLOW);
+                    }
+                    fonte.draw(batch, nome + ":", 220, 260);
+                    fonte.setColor(Color.WHITE);
+                    fonte.draw(batch, mensagem, 220, 210, 1480, -1, true);
                 }
-                fonte.draw(batch, nome + ":", 220, 260);
-                fonte.setColor(Color.WHITE);
-                fonte.draw(batch, mensagem, 220, 210, 1480, -1, true);
             }
         }
     }
-}
 
 
-@Override
-public void resize(int width, int height) {
-    viewport.update(width, height, true);
-}
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+    }
 
-@Override
-public void pause() {
+    @Override
+    public void pause() {
 
-}
+    }
 
-@Override
-public void resume() {
+    @Override
+    public void resume() {
 
-}
+    }
 
-@Override
-public void hide() {
+    @Override
+    public void hide() {
 
-}
+    }
 
-@Override
-public void dispose() {
+    @Override
+    public void dispose() {
 
-}
+    }
 }

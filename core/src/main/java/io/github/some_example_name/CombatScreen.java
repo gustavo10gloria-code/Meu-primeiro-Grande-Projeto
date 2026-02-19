@@ -21,7 +21,7 @@ public class CombatScreen implements Screen {
     private FitViewport viewport;
     private int estadoBatalha = 0; //0: Narrador Inicial, 1:Luta, 2: Falas de finalização
     private boolean exibindoDialogo = true;
-    private BitmapFont fonte;
+    private BitmapFont fonteFala, fonteLuta;
     //localização dos personagens na tela
     private float enioX = 280, enioY = 200;
     private float inimigoX = 1400, inimigoY = 200;
@@ -108,7 +108,8 @@ public class CombatScreen implements Screen {
         musicMorreu = Gdx.audio.newMusic(Gdx.files.internal("Sound/Derrota.mp3"));
 
         //Falas
-        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
+        FreeTypeFontGenerator gerador1 = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
+        FreeTypeFontGenerator gerador2 = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/RetroGaming.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parametro.size = 38; //O tamanho da fonte
         parametro.color = Color.WHITE; //A cor da fonte
@@ -116,8 +117,10 @@ public class CombatScreen implements Screen {
         parametro.borderColor = Color.BLACK; //Cor da borda
         parametro.shadowOffsetX = 3; //Sombra da borda pra dar profundidade
         parametro.shadowOffsetY = 3;
-        fonte = gerador.generateFont(parametro);
-        gerador.dispose();
+        fonteFala = gerador1.generateFont(parametro);
+        fonteLuta = gerador2.generateFont(parametro);
+        gerador1.dispose();
+        gerador2.dispose();
     }
 
     @Override
@@ -246,11 +249,11 @@ public class CombatScreen implements Screen {
 
     private void desenharInterface() {
         if (estadoBatalha == 1) {
-            fonte.draw(batch, "Enio HP: " + vidaEnio, enioX, enioY + 350);
-            fonte.draw(batch, "Inimigo HP:" + vidaInimigo, inimigoX, inimigoY + 350);
-            fonte.draw(batch, logCombate, 500, 900);
+            fonteLuta.draw(batch, "Enio HP: " + vidaEnio, enioX, enioY + 350);
+            fonteLuta.draw(batch, "Inimigo HP:" + vidaInimigo, inimigoX, inimigoY + 350);
+            fonteLuta.draw(batch, logCombate, 500, 900);
             if (turnoEnio && !exibindoDialogo) {
-                fonte.draw(batch, "[A] ATACAR      [D] DEFENDER", 700, 150);
+                fonteLuta.draw(batch, "[A] ATACAR      [D] DEFENDER", 700, 150);
 
             }
         }
@@ -261,15 +264,15 @@ public class CombatScreen implements Screen {
             if (falaIndice < falasAtuais.length) {
                 String[] partes = falasAtuais[falaIndice].split(": "); //Para Separar o nome das falas
                 if (partes[0].equals(("Enio"))) {
-                    fonte.setColor(Color.BROWN);
+                    fonteFala.setColor(Color.BROWN);
                 } else if (partes[0].equals(("Narrador"))){
-                    fonte.setColor(Color.CYAN);
+                    fonteFala.setColor(Color.CYAN);
                 } else {
-                    fonte.setColor(Color.DARK_GRAY);
+                    fonteFala.setColor(Color.DARK_GRAY);
                 }
-                fonte.draw(batch, partes[0] + ":", 220, 260);
-                fonte.setColor(Color.WHITE); // Texto da fala sempre branco
-                fonte.draw(batch, partes[1], 220, 210, 1480, -1, true);
+                fonteFala.draw(batch, partes[0] + ":", 220, 260);
+                fonteFala.setColor(Color.WHITE); // Texto da fala sempre branco
+                fonteFala.draw(batch, partes[1], 220, 210, 1480, -1, true);
             }
         }
 
@@ -317,7 +320,8 @@ public class CombatScreen implements Screen {
 
         // Outros
         batch.dispose();
-        fonte.dispose();
+        fonteFala.dispose();
+        fonteLuta.dispose();
     }
 
     public int getLutaAtual() {

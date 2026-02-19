@@ -84,6 +84,30 @@ public class DialogueScreen implements Screen {
         camera = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080, camera);
         viewport.apply();
+
+        //Para faer o Save Automatico
+        salvarProgesso();
+    }
+
+    private void salvarProgesso(){
+        // estadoHistoria indica qual reino foi completado:
+        // 1 = Começo da história (ainda não completou nada)
+        // 2 = Completou TCR (capítulo 1)
+        // 3 = Completou Madoka (capítulo 2)
+        // 4 = Completou Arabianos (capítulo 3)
+        // 5 = Completou UFBA (capítulo 4)
+        // 6 = Completou Negrolinos (capítulo 5)
+        // 7 = Final do jogo
+
+        // Salva o capítulo atual (último completado)
+        int capituloCompletado = estadoHistoria - 1; // Converte para número do capítulo
+        if (capituloCompletado > 0) { // Só salva se completou algum capítulo
+            GerenciadorSave.salvarProgessor(capituloCompletado, 0);
+        }
+
+        // Desbloqueia o próximo capítulo
+        int proximoCapitulo = estadoHistoria; // O próximo a ser jogado
+        GerenciadorSave.saveDesbloqueado(proximoCapitulo);
     }
 
     @Override
