@@ -29,7 +29,7 @@ public class MadokaScreen implements Screen {
     private final float mapaLargura = 1920;
     private final float mapaAltura = 1080;
     //Estados da História na Madoka
-    private int estadoHistoria = 0; //0: Narrador Inicial, 1:Gameplay Livre, 2: Falas na loja
+    private int estadoHistoria = 0; //0: Narrador Inicial, 1:Gameplay Livre, 2: Falas na loja, 3: Castelo, 4: Floresta Bandidos, 5: Combate bandidos, 6: Dragão, 7: Combate Dragão, 8: Final Dragão
     private boolean exibindoDialogo = true; //Começar com narrador falando.
     private BitmapFont fonte;
     private int cenarioAtual = 0;
@@ -50,6 +50,32 @@ public class MadokaScreen implements Screen {
         "Lojista: Então vá naquele castelo e peça uma audiencia com eles, vai que voce consegue.",
         "Narrador: Então Enio vai para o castelo da Madoka.",
     };
+    private String[] falasCastelo = {
+        "Lucos: Qual o seu pedido?",
+        "Enio: Eu quero comer a melhor comida do reino, cachorro flambado.",
+        "Tabajaro: Essa comida é so para a elite da Madoka, flashbangs que nem você não podem comer.",
+        "Enio: Mas eu faço qualquer coisa.",
+        "Lucos: Qualquer coisa? Hm interessante.",
+        "Tabajaro: Estamos com dois problemas serios, que se voce conseguir resolver a gente te deixar comer.",
+        "Tabajaro: Está tendo uma infestação de uns bandidos de merda, chamados figurantes, eles estão tentando controlar o dragão do reino.",
+        "Lucos: O dragão Pedrozo, ele vive na floresta em paz, mas estão tentando controlar ele pra destruir o reino",
+        "Lucos: Vá e derrote os bandidos, que voce tera a sua recompensa.",
+        "Narrador: Então nosso guerreiro começa a sua andada para floresta.",
+    };
+    private String[] falasFloresta = {
+        "Narrador: Enio acaba chegando na floresta na qual os bandidos estão.",
+        "Bandidos: Oque você quer gordinho?",
+        "Enio: Eu quero que vocês parem com isso de tentar dominar o dragão.",
+        "Bandidos: Hahaha e quem vai fazer a gente parar? Você? Um gordo desse nem deveria levantar da cama.",
+        "Enio: Eu vou dar uma lição em vocês então, pra vocês verem oque o gordo pode fazer.",
+    };
+    private String[] falasDragao = {
+        "Bandidos: Vá Pedroso, mate ele e depois destrua todo o reino da Madoka.",
+        "Enio: Ai meu Deus eu to fudido.",
+    };
+    private String[] falasFinais = {
+        "To com preguiça" //So por enquanto
+    };
     private int falaIndice = 0;
 
     @Override
@@ -60,10 +86,11 @@ public class MadokaScreen implements Screen {
         viewport.apply();
         //Todas as imagens que aparecem na tela
         caxaDialogo = new Texture("UI/caixaDialogo.png");
-        backgroundMadoka = new Texture[3];
+        backgroundMadoka = new Texture[4];
         backgroundMadoka[0] = new Texture("Backgrounds/Madoka.png"); // Cidade
         backgroundMadoka[1] = new Texture("Backgrounds/MadokaCastelo.png"); // Castelo
         backgroundMadoka[2] = new Texture("Backgrounds/MadokaFloresta.png"); // Floresta
+        backgroundMadoka[3] = new Texture("Backgrounds/MadokaDragao.png"); //Dragão
         enioFrente = new Texture[2];
         enioFrente[0] = new Texture("Enio/EnioFrente.png");
         enioFrente[1] = new Texture("Enio/EnioFrentef.png");
@@ -97,6 +124,7 @@ public class MadokaScreen implements Screen {
         gerador.dispose();
     }
 
+
     @Override
     public void render(float delta) {
         camera.update();
@@ -113,7 +141,13 @@ public class MadokaScreen implements Screen {
         // Desenha o fundo baseado no cenário que ele está
         batch.draw(backgroundMadoka[cenarioAtual], 0, 0, 1920, 1080);
 
-        batch.draw(enioAtual, x, y, 128, 128);
+        if (estadoHistoria == 0 || estadoHistoria == 1 || estadoHistoria == 2) {
+            batch.draw(enioAtual, x, y, 128, 128);
+        } else if (estadoHistoria == 3) {
+            batch.draw(enioAtual, 910, 300, 128, 128);
+        } else if (estadoHistoria == 4) {
+            batch.draw(enioAtual, 920, 300, 128, 128);
+        }
 
         if (exibindoDialogo) {
             desenharCaixaDialogo();
@@ -168,20 +202,20 @@ public class MadokaScreen implements Screen {
         if (y < 0) y = 0;
 
         //Pra não deixar ela sair pelo ceu ou por baixo
-        /**
-         switch float limiteYAtual = 350;//Limite de altura de onde ele pode ir
-         if (x < 550) { //Pra ajustar o limite de acordo com onde Enio tá
-         limiteYAtual = 180;
-         } else if (x > 1250) {
-         limiteYAtual = 180;
-         } else {
-         limiteYAtual = 250;
-         }
 
-         if (y > limiteYAtual) {
-
-         }
-         Esta assim por conta que dps vou ver os tamanhos do mapa pra delimitar, e vou ter que delimitar 1 pra cada mapa tbm*/
+        if (estadoHistoria == 1) {
+            float limiteYAtual = 350;
+            if (x < 550) {
+                limiteYAtual = 180;
+            } else if (x > 1250) {
+                limiteYAtual = 180;
+            } else {
+                limiteYAtual = 140;
+            }
+            if (y > limiteYAtual) {
+                y = limiteYAtual;
+            }
+        }
     }
 
     private void atualizarLogicaDialogos() {
@@ -195,7 +229,7 @@ public class MadokaScreen implements Screen {
         } else {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 falaIndice++;
-                String[] falasAtuais = (estadoHistoria == 0) ? falasEntrada : falasLoja;
+                String[] falasAtuais = pegarArrayFalasAtual();
                 //Essa é pra se as falas acabarem, o jogo voltar pra gameplay
                 if (falaIndice >= falasAtuais.length) {
                     exibindoDialogo = false;
@@ -205,30 +239,65 @@ public class MadokaScreen implements Screen {
 
                     // Se acabou a conversa da loja, ele ganha a missão e pode ir pro castelo
                     if (estadoHistoria == 2) {
-                        // estadoHistoria = 3; // Missão dada!
+                        estadoHistoria = 3;
+                        cenarioAtual = 1;
+                        exibindoDialogo = true;
+                    } else if (estadoHistoria == 3) {
+                        estadoHistoria = 4;
+                        cenarioAtual = 2;
+                        exibindoDialogo = true;
+                    } else if (estadoHistoria == 4) {
+                        estadoHistoria = 5;
+                        Main game = (Main) Gdx.app.getApplicationListener();
+                        if (game.combatScreen == null) {
+                            game.combatScreen = new CombatScreen();
+                        }
+                        game.combatScreen.setLutaAtual(2);
+                        game.setScreen(game.combatScreen);
+                    } else if (estadoHistoria == 6){
+                        estadoHistoria = 7;
+                        cenarioAtual = 3;
+                        Main game = (Main) Gdx.app.getApplicationListener();
+                        if (game.combatScreen == null) {
+                            game.combatScreen = new CombatScreen();
+                        }
+                        game.combatScreen.setLutaAtual(3);
+                        game.setScreen(game.combatScreen);
+                    } else if (estadoHistoria == 8) {
+
                     }
                 }
             }
-            if (estadoHistoria == 0 || estadoHistoria == 1) {
+            if (estadoHistoria == 0 || estadoHistoria == 1 || estadoHistoria == 3 || estadoHistoria == 4 || estadoHistoria == 8) {
                 lojaMusic.stop();
                 MadokaMusic.play();
-            } else {
+            } else if (estadoHistoria == 2) {
                 MadokaMusic.stop();
                 lojaMusic.play();
+            } else if (estadoHistoria == 5) {
+                MadokaMusic.stop();
+            } else if (estadoHistoria == 6){
+                cenarioAtual = 3;
             }
         }
+    }
+    private String[] pegarArrayFalasAtual() {
+        if (estadoHistoria == 0) return falasEntrada;
+        if (estadoHistoria == 2) return falasLoja;
+        if (estadoHistoria == 3) return falasCastelo;
+        if (estadoHistoria == 4) return falasFloresta;
+        if (estadoHistoria == 6) return falasDragao;
+        if (estadoHistoria == 8) return falasFinais;
+        return new String[0]; // array vazio
     }
 
     private void desenharCaixaDialogo() {
         if (exibindoDialogo) {
             batch.draw(caxaDialogo, 160, 40, 1600, 250);
             //Pro jogo n bugar, eu crio esse if temporario pra decidir quais falar amostrar
-            String[] falasAtuais = new String[3];
-            if (estadoHistoria == 0) falasAtuais = falasEntrada;
-            if (estadoHistoria == 2) falasAtuais = falasLoja;
-            // if (estadoHistoria == 3) falasAtuais = falasFinais;
+            String[] falasAtuais = pegarArrayFalasAtual();
 
-            if (falaIndice < falasAtuais.length) {
+            if (falasAtuais.length > 0 && falaIndice < falasAtuais.length) {
                 String[] partes = falasAtuais[falaIndice].split(": ");
                 if (partes.length >= 2) {
                     String nome = partes[0];
@@ -246,6 +315,8 @@ public class MadokaScreen implements Screen {
                     fonte.setColor(Color.WHITE);
                     fonte.draw(batch, mensagem, 220, 210, 1480, -1, true);
                 }
+            } else {
+                exibindoDialogo = false;
             }
         }
     }
@@ -274,5 +345,13 @@ public class MadokaScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    public int getEstadoHistoria() {
+        return estadoHistoria;
+    }
+
+    public void setEstadoHistoria(int estadoHistoria) {
+        this.estadoHistoria = estadoHistoria;
     }
 }
