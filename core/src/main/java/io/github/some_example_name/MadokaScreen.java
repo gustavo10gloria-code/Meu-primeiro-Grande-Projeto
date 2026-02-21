@@ -74,7 +74,13 @@ public class MadokaScreen implements Screen {
         "Enio: Ai meu Deus eu to fudido.",
     };
     private String[] falasFinais = {
-        "To com preguiça" //So por enquanto
+        "Narrador: Então Enio volta ao castelo da Madoka.",
+        "Lucos: Soube que você derrotou os bandidos, e até conseguiu quebrar o controle do Dragão.",
+        "Lucos: Você é realmente muito forte, interessante.",
+        "Tabajaro: Mas isso não vem ao caso agora, está na hora de você receber sua recompensa.",
+        "Tabajaro: Aqui, cachorro flambado feito da melhor forma possivel.",
+        "Enio: Caramba finalmente, que delicia.",
+        "Narrador: Depois disso o nosso guerreiro volta para sua casa, pra o seu descanso do heroi.",
     };
     private int falaIndice = 0;
 
@@ -122,6 +128,10 @@ public class MadokaScreen implements Screen {
         parametro.shadowOffsetY = 3;
         fonte = gerador.generateFont(parametro);
         gerador.dispose();
+
+        if (estadoHistoria == 8){
+            exibindoDialogo = true;
+        }
     }
 
 
@@ -256,7 +266,7 @@ public class MadokaScreen implements Screen {
                         game.setScreen(game.combatScreen);
                     } else if (estadoHistoria == 6){
                         estadoHistoria = 7;
-                        cenarioAtual = 3;
+                        cenarioAtual = 1;
                         Main game = (Main) Gdx.app.getApplicationListener();
                         if (game.combatScreen == null) {
                             game.combatScreen = new CombatScreen();
@@ -264,7 +274,10 @@ public class MadokaScreen implements Screen {
                         game.combatScreen.setLutaAtual(3);
                         game.setScreen(game.combatScreen);
                     } else if (estadoHistoria == 8) {
-
+                        estadoHistoria = 9;
+                        Main game = (Main) Gdx.app.getApplicationListener();
+                        game.dialogueScreen.setEstadoHistoria(3);
+                        game.setScreen(game.dialogueScreen);
                     }
                 }
             }
@@ -274,13 +287,14 @@ public class MadokaScreen implements Screen {
             } else if (estadoHistoria == 2) {
                 MadokaMusic.stop();
                 lojaMusic.play();
-            } else if (estadoHistoria == 5) {
+            } else if (estadoHistoria == 5 || estadoHistoria == 9) {
                 MadokaMusic.stop();
             } else if (estadoHistoria == 6){
                 cenarioAtual = 3;
             }
         }
     }
+
     private String[] pegarArrayFalasAtual() {
         if (estadoHistoria == 0) return falasEntrada;
         if (estadoHistoria == 2) return falasLoja;

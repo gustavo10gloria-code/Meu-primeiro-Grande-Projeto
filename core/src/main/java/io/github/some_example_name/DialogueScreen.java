@@ -22,7 +22,7 @@ public class DialogueScreen implements Screen {
     private Music casaEnioMusic;
     private BitmapFont fonte; //Essa é onde fica guardado os textos pra aparecer na tela
     private GlyphLayout layout = new GlyphLayout();
-    private String[] falasComecoHistoria, falasPosTCR;
+    private String[] falasComecoHistoria, falasPosTCR, falasPosMadoka;
     private int falaAtualNum;
     private OrthographicCamera camera;
     private FitViewport viewport;
@@ -57,6 +57,15 @@ public class DialogueScreen implements Screen {
             "Esposa Enio: Sim meu amor, é uma iguaria, mas são poucas pessoas que são autorizadas a comer isso",
             "Enio: Tá bom né, vou ter que passar por essa.",
             "Narrador: Então nosso gordinho se prepara para no dia seguinte ir para a Madoka.",
+        };
+        falasPosMadoka = new String[]{
+            "Enio: Finalmente em casa, até que aquele cachorro era bom",
+            "Esposa: Ai queria ter provado.",
+            "Esposa: Você vai até que reino agora? Falam que a comida dos Arabianos é muito boa.",
+            "Esposa: Mas lá é muito perigoso.",
+            "Enio: Então eu vou lá, deixa eu ver qual a comida dos Arabianos.",
+            "Enio: Areia destilada???",
+            "Enio: Ah ta bom, tem que respeitar as culturas diferentes. Amanha eu vou pra lá",
         };
     }
 
@@ -102,7 +111,7 @@ public class DialogueScreen implements Screen {
         // Salva o capítulo atual (último completado)
         int capituloCompletado = estadoHistoria - 1; // Converte para número do capítulo
         if (capituloCompletado > 0) { // Só salva se completou algum capítulo
-            GerenciadorSave.salvarProgessor(capituloCompletado, 0);
+            GerenciadorSave.salvarProgesso(capituloCompletado, 0);
         }
 
         // Desbloqueia o próximo capítulo
@@ -123,6 +132,7 @@ public class DialogueScreen implements Screen {
         String[] falaAtual = new String[2];
         if (estadoHistoria == 1) falaAtual = falasComecoHistoria;
         if (estadoHistoria == 2) falaAtual = falasPosTCR;
+        if (estadoHistoria == 3) falaAtual = falasPosMadoka;
 
         if (falaAtualNum < falaAtual.length) {
             String[] partes = falaAtual[falaAtualNum].split(": "); //Pra dividir a frase onde tem :
@@ -153,6 +163,9 @@ public class DialogueScreen implements Screen {
                         game.setScreen(new TCRScreen());
                     } else if (estadoHistoria == 2) {
                         game.setScreen(new MadokaScreen());
+                    } else if (estadoHistoria == 3){
+                        game.setScreen(new TCRScreen());
+                        //Depois coloco a tela nova.
                     }
                 }
             }

@@ -11,6 +11,7 @@ public class Main extends Game {
     public DialogueScreen dialogueScreen;
     public SelecaoCapitulo selecaoCapitulo;
     public MadokaScreen madokaScreen;
+    public ArabianosScreen arabianosScreen;
 
     @Override
     public void create(){
@@ -20,11 +21,13 @@ public class Main extends Game {
         combatScreen = new CombatScreen();
         dialogueScreen = new DialogueScreen(this);
         madokaScreen = new MadokaScreen();
+        arabianosScreen = new ArabianosScreen();
         selecaoCapitulo = new SelecaoCapitulo(this, musicMenu);
         setScreen(selecaoCapitulo);
         setScreen(tcrScreen);
         setScreen(dialogueScreen);
         setScreen(madokaScreen);
+        setScreen(arabianosScreen);
         this.setScreen((new MenuScreen(this)));
     }
 

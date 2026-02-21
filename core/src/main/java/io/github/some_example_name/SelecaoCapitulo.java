@@ -36,7 +36,7 @@ public class SelecaoCapitulo implements Screen {
         this.musicMenu = musicMenu;
         this.batch = new SpriteBatch();
         this.fonte = new BitmapFont();
-        this.maxCapitulo = GerenciadorSave.carregarCapitloMaximo();
+        this.maxCapitulo = GerenciadorSave.carregarCapituloMaximo();
     }
 
     @Override
@@ -131,12 +131,10 @@ public class SelecaoCapitulo implements Screen {
             switch (opcao) {
                 case 0: //Novo Jogo
                     musicMenu.stop(); // PARA A MÚSICA
-                    musicMenu.dispose();
                     game.setScreen(new DialogueScreen(game));
                     break;
                 case 1: //Continuar
                     musicMenu.stop(); // PARA A MÚSICA
-                    musicMenu.dispose();
                     int capituloSalvo = GerenciadorSave.carregarCapitulo();
                     break;
                 case 2: //Escolher capitulo
@@ -171,8 +169,10 @@ public class SelecaoCapitulo implements Screen {
                         musicMenu.dispose();
                         game.setScreen(new MadokaScreen());
                         break;
-                    //Do 2 pra baixo ta sem nada pq ainda não fiz essas telas
-                    case 5:
+                    case 5: //Arabianos
+                        musicMenu.stop(); // PARA A MÚSICA
+                        musicMenu.dispose();
+                        game.setScreen(new ArabianosScreen());
                         break;
                     case 6:
                         break;
@@ -259,5 +259,6 @@ public class SelecaoCapitulo implements Screen {
         batch.dispose();
         fonte.dispose();
         background.dispose();
+        musicMenu.dispose();
     }
 }

@@ -8,7 +8,7 @@ public class GerenciadorSave {
     private static final Preferences preds = Gdx.app.getPreferences("EnioAdventureSave");
 
     //Função para fazer o save
-    public static void salvarProgessor(int capitulo, int estadoHistoria){
+    public static void salvarProgesso(int capitulo, int estadoHistoria){
         preds.putInteger("capitulo", capitulo);
         preds.putInteger("estado", estadoHistoria);
         preds.flush();
@@ -23,7 +23,7 @@ public class GerenciadorSave {
     }
 
     public static void saveDesbloqueado(int capituloMaximo){
-        int atual = carregarCapitloMaximo();
+        int atual = carregarCapituloMaximo();
         //Aqui vai so salvar se o capítulo que estiver for maior que o capítulo Maximo
         if (capituloMaximo > atual){
             preds.putInteger("capituloMaximo", capituloMaximo);
@@ -31,7 +31,7 @@ public class GerenciadorSave {
         }
     }
 
-    public static int carregarCapitloMaximo(){
+    public static int carregarCapituloMaximo(){
         return preds.getInteger("capituloMaximo", 1); //Para começar sempre pelo 1
     }
 }

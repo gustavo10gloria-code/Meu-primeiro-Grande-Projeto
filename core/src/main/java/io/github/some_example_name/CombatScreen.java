@@ -13,10 +13,11 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+
 public class CombatScreen implements Screen {
-    private Texture background, caixaDialogo, enioBase, enioAtual, enioLuta, enioDano, inimigoAtual, enioEspecial;
+    private Texture background, caixaDialogo, enioBase, enioAtual, enioLuta, enioDano, inimigoAtual, enioEspecial, texInimigoBase, texInimigoAtaque;
     private SpriteBatch batch;
-    private Music musicBattle, musicGanhou, musicMorreu, enioDanoSound, inimigoDanoSound;
+    private Music musicBattle, musicGanhou, musicMorreu, enioDanoSound, inimigoDanoSound, enioEspecialSound;
     private OrthographicCamera camera;
     private FitViewport viewport;
     private int estadoBatalha = 0; //0: Narrador Inicial, 1:Luta, 2: Falas de finalização
@@ -51,7 +52,13 @@ public class CombatScreen implements Screen {
         //Luta 3 Dragão Madoka
         {"Enio: Ai meu deus como que eu vou derrotar isso?",
             "Enio: Eu vou ter que usar meu poder novo que ganhei depois de comer o chocolate",
-            "Narrador: Enio agora tem um ataque especial, porem so da pra usar 1 vez na batalha, use com sabedoria."},
+            "Narrador: Enio agora tem um ataque especial, porem so da pra usar 1 vez na batalha, e so em batalhas que ele esteja com real risco de morte"},
+        //Luta 4: Primeira luta Taboco
+        {"Taboco: Vem pro fut vem."
+        },
+        //Luta 5: luta Taboco fase 2
+        {"Taboco: Espero que esteja preparado para meu poder verdadeiro.",
+            "Enio: Vamos ver se você é forte mesmo."},
     };
     private String[][] todasFalasFinais = {
         {},
@@ -66,29 +73,39 @@ public class CombatScreen implements Screen {
         },
         //Luta 2 Bandidos Madoka
         {"Bandidos: Você pode ter derrotado a gente, mas já estamos controlando o dragão",
-            "Enio: Oque?",
+            "Enio: O que?",
             "Bandidos: Vai Pedroso, mata esse desgraçado",
         },
         //Luta 3 Dragão Madoka
-        {"Enio: Eu consegui, pode me chamar de Dragonborne porra!!!"},
+        {"Enio: Eu consegui, pode me chamar de Dragonborne porra!!!",
+            "Pedroso: Obrigado, voce me libertou do controle deles",
+            "Enio: O que, voce fala?",
+            "Pedroso: Sim, mas por conta do controle deles eu estava preso, volte ao castelo para receber a sua recompensa."},
+        //Luta 4: Primeira luta Taboco
+        {"Enio: Era so essa a sua força? Muito fraco.",
+        },
+        //Luta 5: luta Taboco fase 2
+        {"Enio: Caramba essa luta foi difícil, você é realmente muito forte.",
+            "Taboco: Obrigado pela luta, talvez você seja forte o suficiente para derrotar ELES.",
+        },
     };
     private int falaIndice = 0;
 
     //Vida dos personagens (luta 1, luta2, luta 3.....)
     private int vidaEnio = 100;
     private int danoEnio = 10;
-    private int[] vidaEnioL = {0, 100, 125, 125};
-    private int[] danoBaseEnio = {0, 10, 15, 15};
+    private int[] vidaEnioL = {0, 100, 125, 125, 150, 150};
+    private int[] danoBaseEnio = {0, 10, 15, 15, 20, 20};
     private int vidaInimigo = 70;
     private int danoInimigo = 5;
-    private int[] vidaInimigoL = {0, 70, 2, 250};
-    private int[] danoBaseInimigo = {0, 5, 7, 10};
+    private int[] vidaInimigoL = {0, 70, 160, 250, 1, 1};
+    private int[] danoBaseInimigo = {0, 5, 7, 10, 12, 15};
     //Cenarios e Musicas e sprites
-    private String[] backgrounds = {null, "Backgrounds/TCRCombat.png", "Backgrounds/MadokaCombat.png", "Backgrounds/MadokaCombat.png"};
-    private String[] musicasLuta = {null, "Sound/TCRMusicBattle.mp3", "Sound/MadokaCombat.mp3", "Sound/DragonCombat.mp3"};
-    private String[] inimigosBase = {null, "Inimigos/BandidoTCR.png", "Inimigos/bandidoMadoka.png", "Inimigos/DragãoBase.png"};
-    private String[] inimigosBatendo = {null, "Inimigos/BandidoTCRAtaque.png", "Inimigos/bandidoMadokaBatendo.png", "Inimigos/DragãoBatendo.png"};
-    private String[] inimigoRecebendoDano = {null, "Sound/BandidoTCRDano.mp3", "Sound/BandidoTCRDano.mp3", "Sound/BandidoTCRDano.mp3"};
+    private String[] backgrounds = {null, "Backgrounds/TCRCombat.png", "Backgrounds/MadokaCombat.png", "Backgrounds/MadokaCombat.png", "Backgrounds/ArabianosCombat.png", "Backgrounds/ArabianosCombat.png"};
+    private String[] musicasLuta = {null, "Sound/TCRMusicBattle.mp3", "Sound/MadokaCombat.mp3", "Sound/DragonCombat.mp3", "Sound/ArabianosCombat1.mp3", "Sound/ArabianosCombat2.mp3"};
+    private String[] inimigosBase = {null, "Inimigos/BandidoTCR.png", "Inimigos/bandidoMadoka.png", "Inimigos/DragãoBase.png", "Inimigos/Taboco.png", "Inimigos/Taboco2.png"};
+    private String[] inimigosBatendo = {null, "Inimigos/BandidoTCRAtaque.png", "Inimigos/bandidoMadokaBatendo.png", "Inimigos/DragãoBatendo.png", "Inimigos/TabocoBatendo.png", "Inimigos/TabocoBatendo2.png"};
+    private String[] inimigoRecebendoDano = {null, "Sound/BandidoTCRDano.mp3", "Sound/BandidoMadokaDano.mp3", "Sound/DragãoDano.mp3", "Sound/TabocaSound.mp3", "Sound/TabocaSound2.mp3"};
 
     @Override
     public void show() {
@@ -114,10 +131,13 @@ public class CombatScreen implements Screen {
         enioEspecial = new Texture("Enio/EnioEspecial.png");
         enioAtual = enioBase;
         enioDanoSound = Gdx.audio.newMusic(Gdx.files.internal("Sound/EnioDano.mp3"));
+        enioEspecialSound = Gdx.audio.newMusic(Gdx.files.internal("Sound/EnioEspecial.mp3"));
         vidaEnio = vidaEnioL[lutaAtual];
 
         //Todos inimigos
-        inimigoAtual = new Texture(inimigosBase[lutaAtual]);
+        texInimigoBase = new Texture(inimigosBase[lutaAtual]);
+        texInimigoAtaque = new Texture(inimigosBatendo[lutaAtual]);
+        inimigoAtual = texInimigoBase;
         vidaInimigo = vidaInimigoL[lutaAtual];
         danoInimigo = danoBaseInimigo[lutaAtual];
         inimigoDanoSound = Gdx.audio.newMusic(Gdx.files.internal(inimigoRecebendoDano[lutaAtual]));
@@ -187,10 +207,19 @@ public class CombatScreen implements Screen {
                             Main game = (Main) Gdx.app.getApplicationListener();
                             game.madokaScreen.setEstadoHistoria(6);
                             game.setScreen(game.madokaScreen);
-                        } else if (lutaAtual == 3) { // <-- ADICIONA ISSO
+                        } else if (lutaAtual == 3) {
                             Main game = (Main) Gdx.app.getApplicationListener();
                             game.madokaScreen.setEstadoHistoria(8); // Final do dragão
                             game.setScreen(game.madokaScreen);
+                            //Arabianos
+                        } else if (lutaAtual == 4) {
+                            Main game = (Main) Gdx.app.getApplicationListener();
+                            game.arabianosScreen.setEstadoHistoria(3);
+                            game.setScreen(game.arabianosScreen);
+                        } else if (lutaAtual == 5){
+                            Main game = (Main) Gdx.app.getApplicationListener();
+                            game.arabianosScreen.setEstadoHistoria(5);
+                            game.setScreen(game.arabianosScreen);
                         }
                     }
                 }
@@ -221,15 +250,18 @@ public class CombatScreen implements Screen {
                     int chance = com.badlogic.gdx.math.MathUtils.random(1, 100);
                     defesa = false;
                     if (chance <= 15) {
+                        inimigoAtual = texInimigoBase;
                         logCombate = "Enio errou o golpe, muito burro kkkkkk.";
                     } else if (chance >= 85) {
                         vidaInimigo -= (danoBaseEnio[lutaAtual] * 2);
                         logCombate = "Enio acertou um golpe critico de " + (danoBaseEnio[lutaAtual] * 2) + "!!!";
+                        inimigoAtual = texInimigoBase;
                         enioAtual = enioLuta;
                         inimigoDanoSound.play();
                     } else {
                         logCombate = "Enio acertou um ataque de " + danoBaseEnio[lutaAtual];
                         vidaInimigo -= danoBaseEnio[lutaAtual];
+                        inimigoAtual = texInimigoBase;
                         enioAtual = enioLuta;
                         inimigoDanoSound.play();
                     }
@@ -237,6 +269,7 @@ public class CombatScreen implements Screen {
                     timerInimigo = 0;
                 } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
                     logCombate = "Enio Defendeu o ataque";
+                    inimigoAtual = texInimigoBase;
                     defesa = true;
                     turnoEnio = false;
                     timerInimigo = 0;
@@ -245,7 +278,9 @@ public class CombatScreen implements Screen {
                     if ((Gdx.input.isKeyJustPressed(Input.Keys.E)) && especialContagem == 1) {
                         logCombate = "Enio usou o especial";
                         vidaInimigo -= (danoBaseEnio[lutaAtual] * 5);
+                        inimigoAtual = texInimigoBase;
                         enioAtual = enioEspecial;
+                        enioEspecialSound.play();
                         especialContagem = 0;
                         turnoEnio = false;
                         timerInimigo = 0;
@@ -266,11 +301,13 @@ public class CombatScreen implements Screen {
                         if (defesa) danoTomado /= 2;
                         vidaEnio -= danoTomado;
                         logCombate = "CRITICO! O inimigo deu " + danoTomado + " de dano!";
+                        inimigoAtual = texInimigoAtaque;
                     } else {
                         danoTomado = danoBaseInimigo[lutaAtual];
                         if (defesa) danoTomado /= 2;
                         vidaEnio -= danoTomado;
                         logCombate = "O inimigo deu " + danoTomado + " de dano";
+                        inimigoAtual = texInimigoAtaque;
                     }
 
                     if (danoTomado > 0) {
