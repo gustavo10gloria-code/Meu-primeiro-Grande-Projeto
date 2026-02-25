@@ -22,7 +22,7 @@ public class DialogueScreen implements Screen {
     private Music casaEnioMusic;
     private BitmapFont fonte; //Essa é onde fica guardado os textos pra aparecer na tela
     private GlyphLayout layout = new GlyphLayout();
-    private String[] falasComecoHistoria, falasPosTCR, falasPosMadoka;
+    private String[] falasComecoHistoria, falasPosTCR, falasPosMadoka, falasPosArabianos;
     private int falaAtualNum;
     private OrthographicCamera camera;
     private FitViewport viewport;
@@ -66,6 +66,17 @@ public class DialogueScreen implements Screen {
             "Enio: Então eu vou lá, deixa eu ver qual a comida dos Arabianos.",
             "Enio: Areia destilada???",
             "Enio: Ah ta bom, tem que respeitar as culturas diferentes. Amanha eu vou pra lá",
+        };
+        falasPosArabianos = new String[]{
+            "Narrador: Enio chega em casa pensativo, quem sera que são ELES? Como são tão fortes?",
+            "Esposa: Oque foi meu amor porque você está assim?",
+            "Enio: Não é nada, eu so to meio avoado mesmo.",
+            "Esposa: Então qual proximo reino você vai ir? So faltam 2.",
+            "Enio: Eu vou ir pra UFBA.",
+            "Enio: O estranho é que eu não encontrei informações sobre qual é a comida da UFBA.",
+            "Enio: Na verdade eu não encontrei informação nenhum sobre esse reino.",
+            "Enio: Aqui so fala que é um reino caido que praticamente não existe mais, e que ninguém vai lá ou vive lá",
+            "Esposa: Nossa parece um lugar bem perigoso, por favor tenha cuidado meu amor.",
         };
     }
 
@@ -133,6 +144,7 @@ public class DialogueScreen implements Screen {
         if (estadoHistoria == 1) falaAtual = falasComecoHistoria;
         if (estadoHistoria == 2) falaAtual = falasPosTCR;
         if (estadoHistoria == 3) falaAtual = falasPosMadoka;
+        if (estadoHistoria == 4) falaAtual = falasPosArabianos;
 
         if (falaAtualNum < falaAtual.length) {
             String[] partes = falaAtual[falaAtualNum].split(": "); //Pra dividir a frase onde tem :
@@ -164,8 +176,9 @@ public class DialogueScreen implements Screen {
                     } else if (estadoHistoria == 2) {
                         game.setScreen(new MadokaScreen());
                     } else if (estadoHistoria == 3){
-                        game.setScreen(new TCRScreen());
-                        //Depois coloco a tela nova.
+                        game.setScreen(new ArabianosScreen());
+                    } else if (estadoHistoria == 4) {
+                        //Depois coloco a tela nova da UFBA
                     }
                 }
             }

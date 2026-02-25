@@ -98,7 +98,7 @@ public class CombatScreen implements Screen {
     private int[] danoBaseEnio = {0, 10, 15, 15, 20, 20};
     private int vidaInimigo = 70;
     private int danoInimigo = 5;
-    private int[] vidaInimigoL = {0, 70, 160, 250, 1, 1};
+    private int[] vidaInimigoL = {0, 70, 160, 250, 250, 320};
     private int[] danoBaseInimigo = {0, 5, 7, 10, 12, 15};
     //Cenarios e Musicas e sprites
     private String[] backgrounds = {null, "Backgrounds/TCRCombat.png", "Backgrounds/MadokaCombat.png", "Backgrounds/MadokaCombat.png", "Backgrounds/ArabianosCombat.png", "Backgrounds/ArabianosCombat.png"};
