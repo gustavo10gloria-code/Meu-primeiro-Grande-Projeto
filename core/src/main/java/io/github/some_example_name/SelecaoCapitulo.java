@@ -174,11 +174,20 @@ public class SelecaoCapitulo implements Screen {
                         musicMenu.dispose();
                         game.setScreen(new ArabianosScreen());
                         break;
-                    case 6:
+                    case 6: //UFBA
+                        musicMenu.stop();
+                        musicMenu.dispose();
+                        game.setScreen(new UFBAScreen());
                         break;
-                    case 7:
+                    case 7: //Negrolinos
+                        musicMenu.stop();
+                        musicMenu.dispose();
+                        game.setScreen(new NegrolinosScreen());
                         break;
-                    case 8:
+                    case 8: //Final Screen
+                        musicMenu.stop();
+                        musicMenu.dispose();
+                        game.setScreen(new FinalScreen());
                         break;
                     case 9:
                         estadoTela = 0;

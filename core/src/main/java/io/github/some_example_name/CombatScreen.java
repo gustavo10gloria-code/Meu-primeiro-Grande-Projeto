@@ -36,7 +36,7 @@ public class CombatScreen implements Screen {
     private boolean defesa = true;
     private String logCombate = "";
     private int especialContagem = 1;
-
+    private boolean Luta2 = false;
 
     //falas
     private String[][] todasFalasIniciais = {
@@ -59,6 +59,14 @@ public class CombatScreen implements Screen {
         //Luta 5: luta Taboco fase 2
         {"Taboco: Espero que esteja preparado para meu poder verdadeiro.",
             "Enio: Vamos ver se você é forte mesmo."},
+        //Luta 6: Larvas
+        {"Enio: Esse veio vai me pagar, desgraçado"},
+        //Luta 7: Morcegos
+        {"Enio: Vem x1 But, ce não troca comigo não"},
+        //Luta 8: Gonçalam
+        {"Gonçalam: Vamos ver a sua força de verdade agora."},
+        //Luta 9: Bruno Magrileno
+        {"Enio: Você está com ELES?"},
     };
     private String[][] todasFalasFinais = {
         {},
@@ -88,29 +96,48 @@ public class CombatScreen implements Screen {
         {"Enio: Caramba essa luta foi difícil, você é realmente muito forte.",
             "Taboco: Obrigado pela luta, talvez você seja forte o suficiente para derrotar ELES.",
         },
+        //Luta 6: Larvas
+        {"Enio: ..."},
+        //Luta 7: Morcegos
+        {"Enio: ..."},
+        //Luta 8: Gonçalam
+        {"Gonçalam: É você realmente é bem forte, pode se tornar rei."},
+        //Luta 9: Bruno Magrileno
+        {"Enio: ..."}
     };
     private int falaIndice = 0;
 
     //Vida dos personagens (luta 1, luta2, luta 3.....)
     private int vidaEnio = 100;
     private int danoEnio = 10;
-    private int[] vidaEnioL = {0, 100, 125, 125, 150, 150};
-    private int[] danoBaseEnio = {0, 10, 15, 15, 20, 20};
+    private int[] vidaEnioL = {0, 100, 125, 125, 150, 150, 170, 170, 200, 250};
+    private int[] danoBaseEnio = {0, 10, 15, 15, 20, 20, 25, 25, 30, 35};
     private int vidaInimigo = 70;
     private int danoInimigo = 5;
-    private int[] vidaInimigoL = {0, 70, 160, 250, 250, 320};
-    private int[] danoBaseInimigo = {0, 5, 7, 10, 12, 15};
+    private int[] vidaInimigoL = {0, 70, 160, 250, 250, 320, 200, 240, 400, 300};
+    private int[] danoBaseInimigo = {0, 5, 7, 10, 12, 15, 9, 11, 17, 15};
     //Cenarios e Musicas e sprites
-    private String[] backgrounds = {null, "Backgrounds/TCRCombat.png", "Backgrounds/MadokaCombat.png", "Backgrounds/MadokaCombat.png", "Backgrounds/ArabianosCombat.png", "Backgrounds/ArabianosCombat.png"};
-    private String[] musicasLuta = {null, "Sound/TCRMusicBattle.mp3", "Sound/MadokaCombat.mp3", "Sound/DragonCombat.mp3", "Sound/ArabianosCombat1.mp3", "Sound/ArabianosCombat2.mp3"};
-    private String[] inimigosBase = {null, "Inimigos/BandidoTCR.png", "Inimigos/bandidoMadoka.png", "Inimigos/DragãoBase.png", "Inimigos/Taboco.png", "Inimigos/Taboco2.png"};
-    private String[] inimigosBatendo = {null, "Inimigos/BandidoTCRAtaque.png", "Inimigos/bandidoMadokaBatendo.png", "Inimigos/DragãoBatendo.png", "Inimigos/TabocoBatendo.png", "Inimigos/TabocoBatendo2.png"};
-    private String[] inimigoRecebendoDano = {null, "Sound/BandidoTCRDano.mp3", "Sound/BandidoMadokaDano.mp3", "Sound/DragãoDano.mp3", "Sound/TabocaSound.mp3", "Sound/TabocaSound2.mp3"};
+    private String[] backgrounds = {null, "Backgrounds/TCRCombat.png", "Backgrounds/MadokaCombat.png", "Backgrounds/MadokaCombat.png",
+        "Backgrounds/ArabianosCombat.png", "Backgrounds/ArabianosCombat.png", "Backgrounds/UFBACombat.png", "Backgrounds/UFBACombat.png",
+        "Backgrounds/NegrolinosFight.png", "Backgrounds/Gemini_Generated_Image_jkd2gyjkd2gyjkd2.png"};
+    private String[] musicasLuta = {null, "Sound/TCRMusicBattle.mp3", "Sound/MadokaCombat.mp3", "Sound/DragonCombat.mp3",
+        "Sound/ArabianosCombat1.mp3", "Sound/ArabianosCombat2.mp3", "Sound/UFBAMusicBattle.mp3", "Sound/UFBAMusicBattle.mp3",
+        "Sound/MusicFightNegrolinos.mp3", "Sound/BrunoCombat.mp3"};
+    private String[] inimigosBase = {null, "Inimigos/BandidoTCR.png", "Inimigos/bandidoMadoka.png", "Inimigos/DragãoBase.png",
+        "Inimigos/Taboco.png", "Inimigos/Taboco2.png", "Inimigos/larvaBase.png", "Inimigos/morcegoBase.png",
+        "Inimigos/GonçaloBase.png", "Inimigos/BrunoBase.png"};
+    private String[] inimigosBatendo = {null, "Inimigos/BandidoTCRAtaque.png", "Inimigos/bandidoMadokaBatendo.png", "Inimigos/DragãoBatendo.png",
+        "Inimigos/TabocoBatendo.png", "Inimigos/TabocoBatendo2.png", "Inimigos/larvaAtaque.png", "Inimigos/morcegoAtaque.png",
+        "Inimigos/GonçaloAtaque.png", "Inimigos/BrunoBatendo.png"};
+    private String[] inimigoRecebendoDano = {null, "Sound/BandidoTCRDano.mp3", "Sound/BandidoMadokaDano.mp3", "Sound/DragãoDano.mp3",
+        "Sound/TabocaSound.mp3", "Sound/TabocaSound2.mp3", "Sound/WormDamage.mp3", "Sound/BatDamage.mp3",
+        "Sound/GonçalamDamage.mp3", "Sound/BrunoMagrilenoDano.mp3"};
 
     @Override
     public void show() {
         //Configuraçoes de camera
         estadoBatalha = 0;
+        turnoEnio = true;
         especialContagem = 1;
         exibindoDialogo = true;
         falaIndice = 0;
@@ -216,10 +243,27 @@ public class CombatScreen implements Screen {
                             Main game = (Main) Gdx.app.getApplicationListener();
                             game.arabianosScreen.setEstadoHistoria(3);
                             game.setScreen(game.arabianosScreen);
-                        } else if (lutaAtual == 5){
+                        } else if (lutaAtual == 5) {
                             Main game = (Main) Gdx.app.getApplicationListener();
                             game.arabianosScreen.setEstadoHistoria(5);
                             game.setScreen(game.arabianosScreen);
+                            //UFBA
+                        } else if (lutaAtual == 6) {
+                            Main game = (Main) Gdx.app.getApplicationListener();
+                            game.ufbaScreen.setEstadoHistoria(4);
+                            game.setScreen(game.ufbaScreen);
+                        } else if (lutaAtual == 7) {
+                            Main game = (Main) Gdx.app.getApplicationListener();
+                            game.ufbaScreen.setEstadoHistoria(6);
+                            game.setScreen(game.ufbaScreen);
+                        } else if (lutaAtual == 8) {
+                            Main game = (Main) Gdx.app.getApplicationListener();
+                            game.negrolinosScreen.setEstadoHistoria(3);
+                            game.setScreen(game.negrolinosScreen);
+                        } else if (lutaAtual == 9){
+                            Main game = (Main) Gdx.app.getApplicationListener();
+                            game.finalScreen.setEstadoHistoria(3);
+                            game.setScreen(game.finalScreen);
                         }
                     }
                 }
@@ -330,6 +374,9 @@ public class CombatScreen implements Screen {
         batch.draw(background, 0, 0, 1920, 1080);
         if (lutaAtual == 3) {
             batch.draw(inimigoAtual, 1100, inimigoY, 800, 800);
+        }
+        if (lutaAtual == 8) {
+            batch.draw(inimigoAtual, 1100, inimigoY, 600, 600);
         } else {
             batch.draw(inimigoAtual, inimigoX, inimigoY, 300, 300);
         }

@@ -22,7 +22,7 @@ public class DialogueScreen implements Screen {
     private Music casaEnioMusic;
     private BitmapFont fonte; //Essa é onde fica guardado os textos pra aparecer na tela
     private GlyphLayout layout = new GlyphLayout();
-    private String[] falasComecoHistoria, falasPosTCR, falasPosMadoka, falasPosArabianos;
+    private String[] falasComecoHistoria, falasPosTCR, falasPosMadoka, falasPosArabianos, falasPosUFBA;
     private int falaAtualNum;
     private OrthographicCamera camera;
     private FitViewport viewport;
@@ -78,6 +78,17 @@ public class DialogueScreen implements Screen {
             "Enio: Aqui so fala que é um reino caido que praticamente não existe mais, e que ninguém vai lá ou vive lá",
             "Esposa: Nossa parece um lugar bem perigoso, por favor tenha cuidado meu amor.",
         };
+        falasPosUFBA = new String[]{
+            "Narrador: Apos uma longa viagem Enio chega em casa ainda mais pensativo.",
+            "Enio: Estou quase lá, mas sera que vale a pena?",
+            "Enio: Sim vale sim, eu vou ser rei.",
+            "Esposa: Agora so falta mais um local meu bem, o reino mais novo de todos, o reino dos Negrolinos",
+            "Esposa: É um reino criado recentemente, que ainda está em processo de desenvovlimento.",
+            "Enio: Hm e qual é a comida de lá? Deixa eu ver aqui.",
+            "Enio: Hmmm.",
+            "Enio: Banana Flambada? Hm parece ser bom, agora estou animado para comer.",
+            "Enio: MEU NOME É ENIO.",
+        };
     }
 
 
@@ -109,7 +120,7 @@ public class DialogueScreen implements Screen {
         salvarProgesso();
     }
 
-    private void salvarProgesso(){
+    private void salvarProgesso() {
         // estadoHistoria indica qual reino foi completado:
         // 1 = Começo da história (ainda não completou nada)
         // 2 = Completou TCR (capítulo 1)
@@ -145,6 +156,7 @@ public class DialogueScreen implements Screen {
         if (estadoHistoria == 2) falaAtual = falasPosTCR;
         if (estadoHistoria == 3) falaAtual = falasPosMadoka;
         if (estadoHistoria == 4) falaAtual = falasPosArabianos;
+        if (estadoHistoria == 5) falaAtual = falasPosUFBA;
 
         if (falaAtualNum < falaAtual.length) {
             String[] partes = falaAtual[falaAtualNum].split(": "); //Pra dividir a frase onde tem :
@@ -175,10 +187,12 @@ public class DialogueScreen implements Screen {
                         game.setScreen(new TCRScreen());
                     } else if (estadoHistoria == 2) {
                         game.setScreen(new MadokaScreen());
-                    } else if (estadoHistoria == 3){
+                    } else if (estadoHistoria == 3) {
                         game.setScreen(new ArabianosScreen());
                     } else if (estadoHistoria == 4) {
-                        //Depois coloco a tela nova da UFBA
+                        game.setScreen(new UFBAScreen());
+                    } else if (estadoHistoria == 5) {
+                        game.setScreen(new NegrolinosScreen());
                     }
                 }
             }

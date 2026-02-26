@@ -14,21 +14,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class UFBAScreen implements Screen {
-    private Texture enioAtual, caxaDialogo;
-    private Texture[] eniolado1, eniolado2, enioCosta, enioFrente, backgroundUFBA;
+    private Texture caxaDialogo;
+    private Texture[] backgroundUFBA;
     private SpriteBatch batch;
     private Music UFBAMusic, MusicaTriste;
-    private float x = 100, y = 100;
-    private float velocidade = 200;
-    private float tempoAnimacao = 0;
-    private int frameAtual = 0;
     private OrthographicCamera camera;
     private FitViewport viewport;
     //Limites do mapa
     private final float mapaLargura = 1920;
     private final float mapaAltura = 1080;
     //Estados da História na UFBA
-    private int estadoHistoria = 0; //0: Narrador Inicial, 1: Dentro do PAF 1, 2: No campo, 3: Luta 1, 4: Pos Luta 1, 5: Luta 2, 6: Pos Luta 2, 7: De volta no PAF 1
+    private int estadoHistoria = 0; //0: Narrador Inicial, 1: Dentro do PAF 1, 2: No PAF 3, 3: Luta1, 4: Apos Luta 1, 5: luta2, 6: Apos Luta 2
     private boolean exibindoDialogo = true; //Começar com narrador falando.
     private BitmapFont fonte;
     private int cenarioAtual = 0;
@@ -57,12 +53,13 @@ public class UFBAScreen implements Screen {
         "Enio: Tá aqui é o PAF 3, eu ja vejo algumas larvas e morcegos, ele só esqueceu de me falar uma coisa besta",
         "Enio: AS LARVAS E MORCEGOS SÂO GIGANTES!!!",
     };
-    private String[] falasPosLutas = {
+    private String[] falaComplementar = {
+        "Enio: ..."
+    };
+    private String[] falasFinais = {
         "Enio: Ai que nojo, como eu vou comer esses negócios?",
         "Enio: Isso vai me deixar mais impusinado do que Pipoca com Sal",
         "Enio: Mas pra ser rei eu preciso fazer isso, vamo Enio.",
-    };
-    private String[] falasFinais = {
         "Enio: Tá aqui suas larvas e morcegos, da proxima vez avisa que são gigantes.",
         "Paulo Freire: Hahaha o meu metodo de ensino é o melhor.",
         "Paulo Freire: Muito bem, você conseguiu, tome essa ficha e espere um pouco",
@@ -95,25 +92,10 @@ public class UFBAScreen implements Screen {
         backgroundUFBA[1] = new Texture("Backgrounds/DentroPaf1.png"); // PAF1
         backgroundUFBA[2] = new Texture("Backgrounds/Paf3.png"); // PAF3
         backgroundUFBA[3] = new Texture("Backgrounds/DentroPaf3.png"); // PAF3 Dentro
-        enioFrente = new Texture[2];
-        enioFrente[0] = new Texture("Enio/EnioFrente.png");
-        enioFrente[1] = new Texture("Enio/EnioFrentef.png");
-        enioCosta = new Texture[2];
-        enioCosta[0] = new Texture("Enio/EnioCosta.png");
-        enioCosta[1] = new Texture("Enio/EnioCostac.png");
-        eniolado1 = new Texture[3];
-        eniolado1[0] = new Texture("Enio/Eniolado1.png");
-        eniolado1[1] = new Texture("Enio/Eniolado2.png");
-        eniolado1[2] = new Texture("Enio/Enioladol.png");
-        eniolado2 = new Texture[3];
-        eniolado2[0] = new Texture("Enio/Eniolado1,1.png");
-        eniolado2[1] = new Texture("Enio/Eniolado2,2.png");
-        eniolado2[2] = new Texture("Enio/Enioladol1.png");
-        enioAtual = enioFrente[frameAtual];
         //Musicas
-        UFBAMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/0000.mp3")); //Mudar aqui dps
+        UFBAMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/UFBAMusic.mp3")); //Mudar aqui dps
         UFBAMusic.setLooping(true);
-        MusicaTriste = Gdx.audio.newMusic(Gdx.files.internal("Sound/0000.mp3"));
+        MusicaTriste = Gdx.audio.newMusic(Gdx.files.internal("Sound/MusicaTriste.mp3"));
         MusicaTriste.setLooping(true);
         //Falas
         FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
@@ -126,6 +108,9 @@ public class UFBAScreen implements Screen {
         parametro.shadowOffsetY = 3;
         fonte = gerador.generateFont(parametro);
         gerador.dispose();
+        if (estadoHistoria == 6){
+            exibindoDialogo = true;
+        }
     }
 
     @Override
@@ -134,7 +119,6 @@ public class UFBAScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
         // 1. Logica
-        atualizarMovimentacao(delta);
         atualizarLogicaDialogos();
 
         // 2. Desenho
@@ -144,13 +128,13 @@ public class UFBAScreen implements Screen {
         // Desenha o fundo baseado no cenário que ele está
         batch.draw(backgroundUFBA[cenarioAtual], 0, 0, 1920, 1080);
 
-        if (estadoHistoria == 0 || estadoHistoria == 1 || estadoHistoria == 2) {
+        /*if (estadoHistoria == 0 || estadoHistoria == 1 || estadoHistoria == 2) {
             batch.draw(enioAtual, x, y, 128, 128);
         } else if (estadoHistoria == 3) {
             batch.draw(enioAtual, 910, 300, 128, 128);
         } else if (estadoHistoria == 4) {
             batch.draw(enioAtual, 920, 300, 128, 128);
-        }
+        }*/
 
         if (exibindoDialogo) {
             desenharCaixaDialogo();
@@ -159,78 +143,7 @@ public class UFBAScreen implements Screen {
         batch.end();
     }
 
-    public void atualizarMovimentacao(float delta) {
-        boolean andando = false;
-        if (!exibindoDialogo) {
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                y += velocidade * delta;
-                andando = true;
-                tempoAnimacao += delta;
-                if (tempoAnimacao > 0.20f) {
-                    frameAtual = (frameAtual == 0) ? 1 : 0;
-                    tempoAnimacao = 0;
-                    enioAtual = enioCosta[frameAtual];
-                }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                y -= velocidade * delta;
-                andando = true;
-                tempoAnimacao += delta;
-                if (tempoAnimacao > 0.20f) {
-                    frameAtual = (frameAtual == 0) ? 1 : 0;
-                    tempoAnimacao = 0;
-                    enioAtual = enioFrente[frameAtual];
-                }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                x -= velocidade * delta;
-                andando = true;
-                tempoAnimacao += delta;
-                if (tempoAnimacao > 0.20f) {
-                    frameAtual = (frameAtual + 1) % 3;
-                    tempoAnimacao = 0;
-                    enioAtual = eniolado2[frameAtual];
-                }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                x += velocidade * delta;
-                andando = true;
-                tempoAnimacao += delta;
-                if (tempoAnimacao > 0.20f) {
-                    frameAtual = (frameAtual + 1) % 3;
-                    tempoAnimacao = 0;
-                    enioAtual = eniolado1[frameAtual];
-                }
-            }
-        }
-        if (x < 0) x = 0;
-        if (x > mapaLargura - 128) x = mapaAltura - 128; //128 por conta do tamanho do sprite
-        if (y < 0) y = 0;
-
-        //Pra não deixar ela sair pelo ceu ou por baixo
-
-        /*if (estadoHistoria == 1) {
-            float limiteYAtual = 350;
-            if (x < 550) {
-                limiteYAtual = 180;
-            } else if (x > 1250) {
-                limiteYAtual = 180;
-            } else {
-                limiteYAtual = 140;
-            }
-            if (y > limiteYAtual) {
-                y = limiteYAtual;
-            }
-        } VER OS LIMITES DO MAPA DPS*/
-    }
-
     public void atualizarLogicaDialogos() {
-        if (!exibindoDialogo) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && x > 640 && x < 1280 && y < 200 && y > 100 && cenarioAtual == 0) {
-                estadoHistoria = 2;
-                exibindoDialogo = true;
-                falaIndice = 0;
-                return;
-                //MUDAR ISSO DEPOIS PRA COLOCAR NO LOCAL CERTO
-            }
-        } else {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 falaIndice++;
                 String[] falasAtuais = pegarArrayFalasAtual();
@@ -239,9 +152,7 @@ public class UFBAScreen implements Screen {
                     exibindoDialogo = false;
                     falaIndice = 0;
 
-                    if (estadoHistoria == 0) estadoHistoria = 1;
 
-                    // Se acabou a conversa da loja, ele ganha a missão e pode ir pro castelo
                     if (estadoHistoria == 0) {
                         estadoHistoria = 1;
                         cenarioAtual = 1;
@@ -259,38 +170,50 @@ public class UFBAScreen implements Screen {
                         game.combatScreen.setLutaAtual(6);
                         game.setScreen(game.combatScreen);
                     } else if (estadoHistoria == 4) {
+                        System.out.println("DEBUG");
                         estadoHistoria = 5;
-                        cenarioAtual = 1;
-                    } else if (estadoHistoria == 5) {
-                        estadoHistoria = 6;
+                        Main game = (Main) Gdx.app.getApplicationListener();
+                        if (game.combatScreen == null) {
+                            game.combatScreen = new CombatScreen();
+                        }
+                        game.combatScreen.setLutaAtual(7);
+                        game.setScreen(game.combatScreen);
+                    } else if (estadoHistoria == 6) {
+                        estadoHistoria = 7;
                         Main game = (Main) Gdx.app.getApplicationListener();
                         game.dialogueScreen.setEstadoHistoria(5);
                         game.setScreen(game.dialogueScreen);
                     }
                 }
             }
-            if (falaIndice >= 6 && estadoHistoria == 5) {
+            if (falaIndice >= 2 && estadoHistoria == 6){
+                cenarioAtual = 1;
+            }
+            if (falaIndice >= 9 && estadoHistoria == 6) {
                 MusicaTriste.play();
+                UFBAMusic.stop();
             } else {
-                if (estadoHistoria == 0 || estadoHistoria == 1 || estadoHistoria == 2 || estadoHistoria == 4 || estadoHistoria == 5) {
+                if (estadoHistoria == 0 || estadoHistoria == 1 || estadoHistoria == 6) {
                     MusicaTriste.stop();
                     UFBAMusic.play();
+                } else if (estadoHistoria == 2 && falaIndice == 1) {
+                    cenarioAtual = 3;
                 } else if (estadoHistoria == 3) {
                     UFBAMusic.stop();
-                } else{
+                } else {
                     UFBAMusic.stop();
                     MusicaTriste.stop();
                 }
             }
         }
-    }
+
 
     private String[] pegarArrayFalasAtual() {
         if (estadoHistoria == 0) return falasComeco;
         if (estadoHistoria == 1) return falasPaf1;
         if (estadoHistoria == 2) return falasPaf3;
-        if (estadoHistoria == 4) return falasPosLutas;
-        if (estadoHistoria == 5) return falasFinais;
+        if (estadoHistoria == 4) return falaComplementar;
+        if (estadoHistoria == 6) return falasFinais;
         return new String[0]; // array vazio
     }
 
@@ -348,5 +271,13 @@ public class UFBAScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    public int getEstadoHistoria() {
+        return estadoHistoria;
+    }
+
+    public void setEstadoHistoria(int estadoHistoria) {
+        this.estadoHistoria = estadoHistoria;
     }
 }
