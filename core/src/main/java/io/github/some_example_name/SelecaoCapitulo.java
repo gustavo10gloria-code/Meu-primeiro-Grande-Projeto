@@ -136,6 +136,9 @@ public class SelecaoCapitulo implements Screen {
                 case 1: //Continuar
                     musicMenu.stop(); // PARA A MÚSICA
                     int capituloSalvo = GerenciadorSave.carregarCapitulo();
+                    if (capituloSalvo < 1) capituloSalvo = 1;
+                    game.dialogueScreen.setEstadoHistoria(capituloSalvo);
+                    game.setScreen(game.dialogueScreen);
                     break;
                 case 2: //Escolher capitulo
                     estadoTela = 1;

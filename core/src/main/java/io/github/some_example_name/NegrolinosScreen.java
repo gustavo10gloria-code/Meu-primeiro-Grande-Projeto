@@ -90,7 +90,7 @@ public class NegrolinosScreen implements Screen {
         enio = new Texture("Enio/Enio.png");
         Goncalam = new Texture("Inimigos/GonçaloBase.png");
         beijo = new Texture("Enio/Beijo.png");
-        banana = new Texture("Itens/BananaFlambada.png");
+        banana = new Texture("itens/bananaFlambada.png");
         enioComendo = new Texture("Enio/EnioBanana.png");
         //Musicas
         NegrolinosMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/NegrolinosMusic.mp3")); //Mudar aqui dps

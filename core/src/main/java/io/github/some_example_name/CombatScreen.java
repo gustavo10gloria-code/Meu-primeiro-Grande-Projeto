@@ -186,7 +186,6 @@ public class CombatScreen implements Screen {
 
         //Falas
         FreeTypeFontGenerator gerador1 = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PressStart2P.ttf"));
-        FreeTypeFontGenerator gerador2 = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parametro.size = 30;
         parametro.color = Color.WHITE; //A cor da fonte
@@ -195,9 +194,8 @@ public class CombatScreen implements Screen {
         parametro.shadowOffsetX = 3; //Sombra da borda pra dar profundidade
         parametro.shadowOffsetY = 3;
         fonteFala = gerador1.generateFont(parametro);
-        fonteLuta = gerador2.generateFont(parametro);
+        fonteLuta = gerador1.generateFont(parametro);
         gerador1.dispose();
-        gerador2.dispose();
     }
 
     @Override

@@ -118,7 +118,7 @@ public class MadokaScreen implements Screen {
         MadokaMusic.setLooping(true);
         lojaMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/Lojas.mp3"));
         lojaMusic.setLooping(true);
-        comendo = Gdx.audio.newMusic(Gdx.files.internal("Sound/comendo.mp3"));
+        comendo = Gdx.audio.newMusic(Gdx.files.internal("Sound/Comendo.mp3"));
         //Falas
         FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();

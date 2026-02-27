@@ -15,7 +15,7 @@ public class GerenciadorSave {
     }
 
     public static int carregarCapitulo(){
-        return preds.getInteger("capitulo", 0);
+        return preds.getInteger("capitulo", 1);
     }
 
     public static int carregarEstado(){
