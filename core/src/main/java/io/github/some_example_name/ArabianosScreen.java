@@ -86,9 +86,9 @@ public class ArabianosScreen implements Screen {
         ArabianosMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/ArabianoMusic.mp3"));
         ArabianosMusic.setLooping(true);
         //Falas
-        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
+        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parametro.size = 38; //O tamanho da fonte
+        parametro.size = 30; //O tamanho da fonte
         parametro.color = Color.WHITE; //A cor da fonte
         parametro.borderWidth = 3; // Colocar a borda
         parametro.borderColor = Color.BLACK; //Cor da borda
@@ -243,6 +243,28 @@ public class ArabianosScreen implements Screen {
 
     @Override
     public void dispose() {
+        // 1. Limpar o Batch e a Fonte
+        if (batch != null) batch.dispose();
+        if (fonte != null) fonte.dispose();
+
+        // 2. Limpar a Texture da caixa de diálogo
+        if (caxaDialogo != null) caxaDialogo.dispose();
+
+        // 3. Limpar o Array de backgrounds (muito importante por serem imagens grandes)
+        if (backgroundArabianos != null) {
+            for (Texture tex : backgroundArabianos) {
+                if (tex != null) tex.dispose();
+            }
+        }
+
+        // 4. Limpar a Música
+        if (ArabianosMusic != null) {
+            ArabianosMusic.stop();
+            ArabianosMusic.dispose();
+        }
+
+        // Se enioAtual for uma textura carregada individualmente (e não apenas uma referência)
+        // adicione: if (enioAtual != null) enioAtual.dispose();
 
     }
 

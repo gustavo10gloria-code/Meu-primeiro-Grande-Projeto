@@ -99,9 +99,9 @@ public class UFBAScreen implements Screen {
         MusicaTriste = Gdx.audio.newMusic(Gdx.files.internal("Sound/MusicaTriste.mp3"));
         MusicaTriste.setLooping(true);
         //Falas
-        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
+        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parametro.size = 38; //O tamanho da fonte
+        parametro.size = 30; //O tamanho da fonte
         parametro.color = Color.WHITE; //A cor da fonte
         parametro.borderWidth = 3; // Colocar a borda
         parametro.borderColor = Color.BLACK; //Cor da borda
@@ -130,7 +130,7 @@ public class UFBAScreen implements Screen {
         batch.draw(backgroundUFBA[cenarioAtual], 0, 0, 1920, 1080);
 
         if (estadoHistoria == 6 && falaIndice >= 7 && falaIndice <= 8){
-            batch.draw(EnioComendo, 860, 440, 600, 600);
+            batch.draw(EnioComendo, 660, 240, 600, 600);
         }
 
         if (exibindoDialogo) {
@@ -264,7 +264,30 @@ public class UFBAScreen implements Screen {
 
     @Override
     public void dispose() {
+        // 1. Renderizador e Fonte
+        if (batch != null) batch.dispose();
+        if (fonte != null) fonte.dispose();
 
+        // 2. Texturas de Interface e Enio
+        if (caxaDialogo != null) caxaDialogo.dispose();
+        if (EnioComendo != null) EnioComendo.dispose();
+
+        // 3. Array de Backgrounds (Limpando os cenários da UFBA)
+        if (backgroundUFBA != null) {
+            for (Texture tex : backgroundUFBA) {
+                if (tex != null) tex.dispose();
+            }
+        }
+
+        // 4. Músicas
+        if (UFBAMusic != null) {
+            UFBAMusic.stop();
+            UFBAMusic.dispose();
+        }
+        if (MusicaTriste != null) {
+            MusicaTriste.stop();
+            MusicaTriste.dispose();
+        }
     }
 
     public int getEstadoHistoria() {

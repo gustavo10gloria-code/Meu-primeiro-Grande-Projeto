@@ -47,5 +47,14 @@ public class Main extends Game {
 
     @Override
     public void dispose() {
+        if (tcrScreen != null) tcrScreen.dispose();
+        if (combatScreen != null) combatScreen.dispose();
+        if (dialogueScreen != null) dialogueScreen.dispose();
+        if (selecaoCapitulo != null) selecaoCapitulo.dispose();
+        if (madokaScreen != null) madokaScreen.dispose();
+        if (arabianosScreen != null) arabianosScreen.dispose();
+        if (ufbaScreen != null) ufbaScreen.dispose();
+        if (negrolinosScreen != null) negrolinosScreen.dispose();
+        if (finalScreen != null) finalScreen.dispose();
     }
 }

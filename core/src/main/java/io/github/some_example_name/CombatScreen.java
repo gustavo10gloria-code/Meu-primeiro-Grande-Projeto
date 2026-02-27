@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 
 public class CombatScreen implements Screen {
-    private Texture background, caixaDialogo, enioBase, enioAtual, enioLuta, enioDano, inimigoAtual, enioEspecial, texInimigoBase, texInimigoAtaque;
+    private Texture background, caixaDialogo, enioBase, enioAtual, enioLuta, enioDano, inimigoAtual, enioEspecial, texInimigoBase, texInimigoAtaque, enioGigante;
     private SpriteBatch batch;
     private Music musicBattle, musicGanhou, musicMorreu, enioDanoSound, inimigoDanoSound, enioEspecialSound, errou, critico;
     private OrthographicCamera camera;
@@ -64,7 +64,7 @@ public class CombatScreen implements Screen {
         //Luta 8: Gonçalam
         {"Gonçalam: Vamos ver a sua força de verdade agora."},
         //Luta 9: Bruno Magrileno
-        {"Enio: Você está com ELES?"},
+        {"Bruno Magrileno: Aqui ELES não podem nos ver e nem ouvir"},
         //Luta 10: Nameless King
         {"Bruno Magrileno: Nameless King!!!"}
     };
@@ -112,11 +112,11 @@ public class CombatScreen implements Screen {
     //Vida dos personagens (luta 1, luta2, luta 3.....)
     private int vidaEnio = 100;
     private int danoEnio = 10;
-    private int[] vidaEnioL = {0, 100, 125, 125, 150, 150, 170, 170, 200, 250, 250};
+    private int[] vidaEnioL = {0, 100, 125, 125, 150, 150, 170, 170, 200, 250, 250}; //250 -- 10
     private int[] danoBaseEnio = {0, 10, 15, 15, 20, 20, 25, 25, 30, 35, 35};
     private int vidaInimigo = 70;
     private int danoInimigo = 5;
-    private int[] vidaInimigoL = {0, 70, 160, 250, 250, 320, 200, 240, 400, 300, 700};
+    private int[] vidaInimigoL = {0, 70, 160, 250, 250, 300, 200, 240, 470, 450, 700}; // 300 -- 9, 700 -- 10
     private int[] danoBaseInimigo = {0, 5, 7, 10, 12, 15, 9, 11, 17, 15, 20};
     //Cenarios e Musicas e sprites
     private String[] backgrounds = {null, "Backgrounds/TCRCombat.png", "Backgrounds/MadokaCombat.png", "Backgrounds/MadokaCombat.png",
@@ -127,10 +127,10 @@ public class CombatScreen implements Screen {
         "Sound/MusicFightNegrolinos.mp3", "Sound/BrunoCombat.mp3", "Sound/NamelessKing.mp3"};
     private String[] inimigosBase = {null, "Inimigos/BandidoTCR.png", "Inimigos/bandidoMadoka.png", "Inimigos/DragãoBase.png",
         "Inimigos/Taboco.png", "Inimigos/Taboco2.png", "Inimigos/larvaBase.png", "Inimigos/morcegoBase.png",
-        "Inimigos/GonçaloBase.png", "Inimigos/BrunoBase.png", "Inimigos/0000.png"};
+        "Inimigos/GonçaloBase.png", "Inimigos/BrunoBase.png", "Inimigos/Nameless King Base.png"};
     private String[] inimigosBatendo = {null, "Inimigos/BandidoTCRAtaque.png", "Inimigos/bandidoMadokaBatendo.png", "Inimigos/DragãoBatendo.png",
         "Inimigos/TabocoBatendo.png", "Inimigos/TabocoBatendo2.png", "Inimigos/larvaAtaque.png", "Inimigos/morcegoAtaque.png",
-        "Inimigos/GonçaloAtaque.png", "Inimigos/BrunoBatendo.png", "Inimigos/0000.png"};
+        "Inimigos/GonçaloAtaque.png", "Inimigos/BrunoBatendo.png", "Inimigos/Nameless King Ataque.png"};
     private String[] inimigoRecebendoDano = {null, "Sound/BandidoTCRDano.mp3", "Sound/BandidoMadokaDano.mp3", "Sound/DragãoDano.mp3",
         "Sound/TabocaSound.mp3", "Sound/TabocaSound2.mp3", "Sound/WormDamage.mp3", "Sound/BatDamage.mp3",
         "Sound/GonçalamDamage.mp3", "Sound/BrunoMagrilenoDano.mp3", "Sound/BrunoMagrilenoDano.mp3"};
@@ -158,6 +158,7 @@ public class CombatScreen implements Screen {
         enioLuta = new Texture("Enio/EnioAtaque.png");
         enioDano = new Texture("Enio/EnioDano.png");
         enioEspecial = new Texture("Enio/EnioEspecial.png");
+        enioGigante = new Texture("Enio/EnioGigante.png");
         enioAtual = enioBase;
         enioDanoSound = Gdx.audio.newMusic(Gdx.files.internal("Sound/EnioDano.mp3"));
         enioEspecialSound = Gdx.audio.newMusic(Gdx.files.internal("Sound/EnioEspecial.mp3"));
@@ -184,10 +185,10 @@ public class CombatScreen implements Screen {
         critico = Gdx.audio.newMusic(Gdx.files.internal("Sound/faaah.mp3"));
 
         //Falas
-        FreeTypeFontGenerator gerador1 = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
-        FreeTypeFontGenerator gerador2 = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/RetroGaming.ttf"));
+        FreeTypeFontGenerator gerador1 = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PressStart2P.ttf"));
+        FreeTypeFontGenerator gerador2 = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parametro.size = 38; //O tamanho da fonte
+        parametro.size = 30;
         parametro.color = Color.WHITE; //A cor da fonte
         parametro.borderWidth = 3; // Colocar a borda
         parametro.borderColor = Color.BLACK; //Cor da borda
@@ -212,13 +213,31 @@ public class CombatScreen implements Screen {
         batch.begin();
         desenharCenarioPersonagens();
         desenharInterface();
+        cutsceneFinal();
         batch.end();
+    }
+
+    private void cutsceneFinal() {
+        if (estadoBatalha == 3) {
+            if (falaIndice == 4 || falaIndice == 5) {
+                batch.draw(enioGigante, enioX, 300, 500, 500);
+            } else if (falaIndice == 6) {
+                batch.draw(enioGigante, 1100, 600, 600, 600);
+            } else if (falaIndice == 7) {
+                batch.draw(enioGigante, 1100, 450, 600, 600);
+            } else if (falaIndice == 8) {
+                batch.draw(enioGigante, 1100, 300, 600, 600);
+            } else if (falaIndice == 9 || falaIndice == 10) {
+                batch.draw(enioGigante, 1100, 200, 700, 700);
+            }
+        }
     }
 
     private void atualizarLogica(float delta) {
         //Logica de falas.
         if (exibindoDialogo && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            String[] falasAtuais = (estadoBatalha == 0) ? todasFalasIniciais[lutaAtual] : todasFalasFinais[lutaAtual];
+            String[] falasAtuais = (estadoBatalha == 0) ? todasFalasIniciais[lutaAtual] :
+                (estadoBatalha == 3) ? new String[10] : todasFalasFinais[lutaAtual];
 
             if (falasAtuais != null && falasAtuais.length > 0) {
                 falaIndice++;
@@ -228,6 +247,12 @@ public class CombatScreen implements Screen {
                         exibindoDialogo = false;
                         estadoBatalha = 1; // Começa a luta
                         falaIndice = 0;
+                    } else if (estadoBatalha == 3) {
+                        // A CENA DO PULO ACABOU!
+                        falaIndice = 0;
+                        estadoBatalha = 2;
+                        musicBattle.stop();
+                        musicGanhou.play(); // Toca a música de vitória no esmagamento!
                     } else if (estadoBatalha == 2) {
                         musicBattle.stop();
                         //TCR
@@ -266,9 +291,13 @@ public class CombatScreen implements Screen {
                             Main game = (Main) Gdx.app.getApplicationListener();
                             game.negrolinosScreen.setEstadoHistoria(3);
                             game.setScreen(game.negrolinosScreen);
-                        } else if (lutaAtual == 9){
+                        } else if (lutaAtual == 9) {
                             Main game = (Main) Gdx.app.getApplicationListener();
                             game.finalScreen.setEstadoHistoria(3);
+                            game.setScreen(game.finalScreen);
+                        } else if (lutaAtual == 10 && estadoBatalha != 3) {
+                            Main game = (Main) Gdx.app.getApplicationListener();
+                            game.finalScreen.setEstadoHistoria(5);
                             game.setScreen(game.finalScreen);
                         }
                     }
@@ -288,10 +317,23 @@ public class CombatScreen implements Screen {
                     falaIndice = 0;
                 }
             } else if (vidaEnio <= 0) {
-                vidaEnio = 0;
-                musicBattle.stop();
-                musicMorreu.play();
-                // Aqui você decide se volta pro menu ou reinicia, tenho que fazer dps
+                if (lutaAtual == 10 && vidaInimigo <= 200) {
+                    if (estadoBatalha != 3) { // Vamos criar um estado 3 para essa Cutscene
+                        estadoBatalha = 3;
+                        exibindoDialogo = true;
+                        falaIndice = 0;
+                        vidaEnio = 1;
+                        enioAtual = enioGigante; // Enio se transforma!
+                    }
+                } else {
+                    vidaEnio = 0;
+                    musicBattle.stop();
+                    musicMorreu.play();
+                    logCombate = "Você Morreu, aperte ENTER, para tentar novamente";
+                    if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                        resetarLuta();
+                    }
+                }
             }
 
             // TURNO DE ENIO
@@ -381,24 +423,31 @@ public class CombatScreen implements Screen {
 
     private void desenharCenarioPersonagens() {
         batch.draw(background, 0, 0, 1920, 1080);
-        if (lutaAtual == 1){
-            batch.draw(enioAtual,  enioX, 165, 300, 300);
+        if (lutaAtual == 1) {
+            batch.draw(enioAtual, enioX, 165, 300, 300);
             batch.draw(inimigoAtual, inimigoX, inimigoY, 300, 300);
-        } else if (lutaAtual == 2){
-            batch.draw(enioAtual,  enioX, 165, 300, 300);
+        } else if (lutaAtual == 2) {
+            batch.draw(enioAtual, enioX, 165, 300, 300);
             batch.draw(inimigoAtual, inimigoX, inimigoY, 300, 300);
         } else if (lutaAtual == 3) {
-            batch.draw(enioAtual,  enioX, 165, 300, 300);
+            batch.draw(enioAtual, enioX, 165, 300, 300);
             batch.draw(inimigoAtual, 1100, inimigoY, 800, 800);
-        } else if (lutaAtual == 4 || lutaAtual == 5){
-            batch.draw(enioAtual,  enioX, 230, 300, 300);
+        } else if (lutaAtual == 4 || lutaAtual == 5) {
+            batch.draw(enioAtual, enioX, 230, 300, 300);
             batch.draw(inimigoAtual, inimigoX, 250, 300, 300);
-        } else if (lutaAtual == 6 || lutaAtual == 7){
-            batch.draw(enioAtual,  enioX, 230, 300, 300);
+        } else if (lutaAtual == 6 || lutaAtual == 7) {
+            batch.draw(enioAtual, enioX, 230, 300, 300);
             batch.draw(inimigoAtual, inimigoX, 250, 300, 300);
-        }else if (lutaAtual == 8) {
-            batch.draw(enioAtual,  enioX, enioY, 300, 300);
+        } else if (lutaAtual == 8) {
+            batch.draw(enioAtual, enioX, enioY, 300, 300);
             batch.draw(inimigoAtual, 1100, inimigoY, 600, 600);
+        } else if (lutaAtual == 10 && estadoBatalha != 3) {
+            batch.draw(enioAtual, enioX, enioY, 300, 300);
+            batch.draw(inimigoAtual, 1100, inimigoY, 600, 600);
+        } else if (lutaAtual == 10 && estadoBatalha == 3 && falaIndice < 10) {
+            batch.draw(inimigoAtual, 1100, inimigoY, 600, 600);
+        } else if (lutaAtual == 10 && estadoBatalha == 3 && falaIndice == 10) {
+            //Não desenhar o inimigo
         } else {
             batch.draw(inimigoAtual, inimigoX, inimigoY, 300, 300);
             batch.draw(enioAtual, enioX, enioY, 300, 300);
@@ -428,9 +477,22 @@ public class CombatScreen implements Screen {
             String[] falasAtuais;
             if (estadoBatalha == 0) {
                 falasAtuais = todasFalasIniciais[lutaAtual];
-            } else {
+            } else if (estadoBatalha == 2) {
                 falasAtuais = todasFalasFinais[lutaAtual];
-            }
+            } else if (estadoBatalha == 3) {
+                falasAtuais = new String[]{
+                    "Nameless King: Então você não era forte o suficiente....",
+                    "Nameless King: Eu estava esperançoso, sobre você",
+                    "Enio: Essa não é a minha força total",
+                    "Enio: AHHHHHHHHHHHHHHH",
+                    "Enio: AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", //4
+                    "Narrador: Enio atingiu o apice de calorias acumuladas, nada tão poderoso tinha sido visto antes",
+                    "Nameless King: Oque????",
+                    "Nameless King: Então Você realmente é o predestinado a derrotar ELES",
+                    "Enio: AGORA VOCÊ VAI VER O TAMANHO DA MINHA FORÇA",
+                    "Narrador: Com apenas uma sentada Enio derrota o Nameless King.",
+                };
+            } else falasAtuais = new String[]{};
             if (falaIndice < falasAtuais.length) {
                 String[] partes = falasAtuais[falaIndice].split(": "); //Para Separar o nome das falas
                 if (partes[0].equals("Enio")) {
@@ -439,14 +501,18 @@ public class CombatScreen implements Screen {
                     fonteFala.setColor(Color.CYAN);
                 } else if (partes[0].equals("Bandido Paripe")) {
                     fonteFala.setColor(Color.DARK_GRAY);
-                } else if (partes[0].equals("Bandidos")){
+                } else if (partes[0].equals("Bandidos")) {
                     fonteFala.setColor(Color.FIREBRICK);
-                } else if (partes[0].equals("Pedroso")){
+                } else if (partes[0].equals("Pedroso")) {
                     fonteFala.setColor(Color.SALMON);
-                } else if (partes[0].equals("Taboco")){
+                } else if (partes[0].equals("Taboco")) {
                     fonteFala.setColor(Color.MAGENTA);
-                } else if (partes[0].equals("Gonçalam")){
+                } else if (partes[0].equals("Gonçalam")) {
                     fonteFala.setColor(Color.ROYAL);
+                } else if (partes[0].equals("Bruno Magrileno")) {
+                    fonteFala.setColor(Color.YELLOW);
+                } else if (partes[0].equals("Nameless King")) {
+                    fonteFala.setColor(Color.NAVY);
                 }
                 fonteFala.draw(batch, partes[0] + ":", 220, 260);
                 fonteFala.setColor(Color.WHITE); // Texto da fala sempre branco
@@ -454,6 +520,31 @@ public class CombatScreen implements Screen {
             }
         }
 
+    }
+
+    private void resetarLuta() {
+        // Reseta apenas as variáveis de estado
+        estadoBatalha = 0;
+        turnoEnio = true;
+        especialContagem = 1;
+        exibindoDialogo = true;
+        falaIndice = 0;
+        timerInimigo = 0;
+        logCombate = "";
+
+        // Reseta as vidas
+        vidaEnio = vidaEnioL[lutaAtual];
+        vidaInimigo = vidaInimigoL[lutaAtual];
+
+        // Reseta os sprites para o padrão
+        enioAtual = enioBase;
+        inimigoAtual = texInimigoBase;
+
+        // Para as músicas e toca a de batalha de novo
+        musicMorreu.stop();
+        musicGanhou.stop();
+        musicBattle.stop();
+        musicBattle.play();
     }
 
     @Override

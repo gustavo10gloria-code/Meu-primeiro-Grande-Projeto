@@ -94,9 +94,9 @@ public class TCRScreen implements Screen {
         comendo.setVolume(100);
 
         //Falas
-        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
+        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parametro.size = 38; //O tamanho da fonte
+        parametro.size = 30; //O tamanho da fonte
         parametro.color = Color.WHITE; //A cor da fonte
         parametro.borderWidth = 3; // Colocar a borda
         parametro.borderColor = Color.BLACK; //Cor da borda
@@ -215,9 +215,9 @@ public class TCRScreen implements Screen {
         } else if (estadoHistoria == 1){
         batch.draw(enioAtual, x, y, 128, 128);}
         if (estadoHistoria == 3 && falaIndice >= 2 && falaIndice < 5){
-            batch.draw(chocholate, 780, 300, 600, 600);
+            batch.draw(chocholate, 660, 240, 600, 600);
         } else if (estadoHistoria == 3 && falaIndice >= 5) {
-            batch.draw(enioComendo, 780, 300, 600, 600);
+            batch.draw(enioComendo, 660, 240, 600, 600);
             comendo.play();
         }
         //Todas as configurações de diálogo
@@ -273,16 +273,34 @@ public class TCRScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
-        fonte.dispose();
-        TCRMusic.dispose();
-        lojaMusic.dispose();
-        backgroundTCR.dispose();
-        caxaDialogo.dispose();
-        for (Texture tex : enioFrente) tex.dispose();
-        for (Texture tex : enioCosta) tex.dispose();
-        for (Texture tex : eniolado1) tex.dispose();
-        for (Texture tex : eniolado2) tex.dispose();
+        // 1. Renderizador e Fontes
+        if (batch != null) batch.dispose();
+        if (fonte != null) fonte.dispose();
+
+        // 2. Músicas (Sempre pare antes de destruir)
+        if (TCRMusic != null) { TCRMusic.stop(); TCRMusic.dispose(); }
+        if (lojaMusic != null) { lojaMusic.stop(); lojaMusic.dispose(); }
+        if (comendo != null) { comendo.stop(); comendo.dispose(); }
+
+        // 3. Texturas de Cenário e Itens
+        if (backgroundTCR != null) backgroundTCR.dispose();
+        if (caxaDialogo != null) caxaDialogo.dispose();
+        if (chocholate != null) chocholate.dispose();
+        if (enioComendo != null) enioComendo.dispose();
+
+        // 4. Arrays de Animação (Onde a memória costuma vazar)
+        if (enioFrente != null) {
+            for (Texture tex : enioFrente) if (tex != null) tex.dispose();
+        }
+        if (enioCosta != null) {
+            for (Texture tex : enioCosta) if (tex != null) tex.dispose();
+        }
+        if (eniolado1 != null) {
+            for (Texture tex : eniolado1) if (tex != null) tex.dispose();
+        }
+        if (eniolado2 != null) {
+            for (Texture tex : eniolado2) if (tex != null) tex.dispose();
+        }
     }
 
     public int getEstadoHistoria() {

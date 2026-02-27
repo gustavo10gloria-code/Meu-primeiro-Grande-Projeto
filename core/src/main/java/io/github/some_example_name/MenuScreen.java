@@ -143,7 +143,20 @@ public class MenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
-        fundoMenu.dispose();
+        // 1. Renderizador
+        if (batch != null) batch.dispose();
+
+        // 2. Texturas
+        if (fundoMenu != null) fundoMenu.dispose();
+
+        // 3. Fontes (Essencial, você criou duas!)
+        if (fonteApresentacao != null) fonteApresentacao.dispose();
+        if (fonteTitulo != null) fonteTitulo.dispose();
+
+        // 4. Música
+        if (musicMenu != null) {
+            musicMenu.stop();
+            musicMenu.dispose();
+        }
     }
 }

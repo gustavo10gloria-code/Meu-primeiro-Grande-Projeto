@@ -120,9 +120,9 @@ public class MadokaScreen implements Screen {
         lojaMusic.setLooping(true);
         comendo = Gdx.audio.newMusic(Gdx.files.internal("Sound/comendo.mp3"));
         //Falas
-        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
+        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parametro.size = 38; //O tamanho da fonte
+        parametro.size = 30; //O tamanho da fonte
         parametro.color = Color.WHITE; //A cor da fonte
         parametro.borderWidth = 3; // Colocar a borda
         parametro.borderColor = Color.BLACK; //Cor da borda
@@ -158,9 +158,9 @@ public class MadokaScreen implements Screen {
         } else if (estadoHistoria == 3) {
             batch.draw(enioAtual, 910, 300, 128, 128);
         } else if (estadoHistoria == 4) {
-            batch.draw(enioAtual, 920, 300, 128, 128);
+            batch.draw(enioAtual, 660, 240, 600, 600);
         } else if (estadoHistoria == 8 && falaIndice >= 4){
-            batch.draw(enioComendo, 920, 300, 600, 600);
+            batch.draw(enioComendo, 660, 240, 600, 600);
             comendo.play();
         }
 
@@ -367,7 +367,45 @@ public class MadokaScreen implements Screen {
 
     @Override
     public void dispose() {
+        // 1. Limpar o Batch e a Fonte
+        if (batch != null) batch.dispose();
+        if (fonte != null) fonte.dispose();
 
+        // 2. Limpar Texturas Simples
+        if (caxaDialogo != null) caxaDialogo.dispose();
+        if (enioComendo != null) enioComendo.dispose();
+        // enioAtual é apenas uma referência, não precisa de dispose próprio
+
+        // 3. Limpar Arrays de Texturas (Animações e Backgrounds)
+        if (backgroundMadoka != null) {
+            for (Texture t : backgroundMadoka) if (t != null) t.dispose();
+        }
+        if (enioFrente != null) {
+            for (Texture t : enioFrente) if (t != null) t.dispose();
+        }
+        if (enioCosta != null) {
+            for (Texture t : enioCosta) if (t != null) t.dispose();
+        }
+        if (eniolado1 != null) {
+            for (Texture t : eniolado1) if (t != null) t.dispose();
+        }
+        if (eniolado2 != null) {
+            for (Texture t : eniolado2) if (t != null) t.dispose();
+        }
+
+        // 4. Limpar Músicas
+        if (MadokaMusic != null) {
+            MadokaMusic.stop();
+            MadokaMusic.dispose();
+        }
+        if (lojaMusic != null) {
+            lojaMusic.stop();
+            lojaMusic.dispose();
+        }
+        if (comendo != null) {
+            comendo.stop();
+            comendo.dispose();
+        }
     }
 
     public int getEstadoHistoria() {

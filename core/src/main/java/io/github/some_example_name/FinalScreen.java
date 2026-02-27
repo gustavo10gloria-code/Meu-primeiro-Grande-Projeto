@@ -17,7 +17,7 @@ public class FinalScreen implements Screen {
     private Texture enioAtual, caxaDialogo, enioParado, enioGordo;
     private Texture[] eniolado1, eniolado2, enioCosta, enioFrente, backgroundFinal, BM;
     private SpriteBatch batch;
-    private Music TCRMusic, BrunoMusic, MusicaTriste, CoroacaoMusic;
+    private Music TCRMusic, BrunoMusic, MusicaTriste, CoroacaoMusic, creditosMusic;
     private float x = 100, y = 100;
     private float velocidade = 200;
     private float tempoAnimacao = 0;
@@ -43,6 +43,7 @@ public class FinalScreen implements Screen {
         "Bruno Magrileno: Você quer derrotar eles né? Primeiro presico ver e testar a sua força, me de uma demostração.",
         "Enio: Aqui a demonstração oh, vou te quebrar na porrada seu magrelo.", //3
         "Bruno Magrileno: É isso que vamos ver.",
+        "Bruno Magrileno: Expansão de Dominio.",
     };
     private String[] falasPosLuta1 = {
         "Enio: É so isso que voce tem?",
@@ -79,7 +80,7 @@ public class FinalScreen implements Screen {
         "Nameless King: Fazendo isso eu irei desaparecer, mas antes eu tenho mais uma ultima coisa pra te contar.",
         "Nameless King: Existe uma dimensão chamada Discord, ela é a sua porta de saida do domo, e a forma de você encontrar ELES.",
         "Nameless King: Nas catacumbas do castelo tem o portal dela. Use com sabedoria.",
-        "Nameless King: Enio, obrigado por reacender a esperança no meu coração.",
+        "Nameless King: Enio, obrigado por reacender a esperança no meu coração.", //7
         "Narrador: Então logo em seguida o Rei Sem Nome, some como se fosse o estalo do Thanos.",
         "Enio: Eu prometo que irei vingar todos, eu vou derrotar ELES e deixar o nosso mundo livre novamente.",
         "Narrador: Então Enio é coroado o rei, o mundo todo está em festa com isso", //10
@@ -98,11 +99,12 @@ public class FinalScreen implements Screen {
         viewport.apply();
         //Todas as imagens que aparecem na tela
         caxaDialogo = new Texture("UI/caixaDialogo.png");
-        backgroundFinal = new Texture[4];
+        backgroundFinal = new Texture[5];
         backgroundFinal[0] = new Texture("Backgrounds/TCRCastle.png"); // Cidade
         backgroundFinal[1] = new Texture("Backgrounds/TCRCastleDentro.png"); // Castelo
         backgroundFinal[2] = new Texture("Backgrounds/Gemini_Generated_Image_jkd2gyjkd2gyjkd2.png"); // Campo de batalha
-        backgroundFinal[3] = new Texture("Backgrounds/TitleMenu.png"); // Coroação
+        backgroundFinal[3] = new Texture("Backgrounds/Coroação.png"); // Coroação
+        backgroundFinal[4] = new Texture("Backgrounds/FIM.png");
         enioFrente = new Texture[2];
         enioFrente[0] = new Texture("Enio/EnioFrente.png");
         enioFrente[1] = new Texture("Enio/EnioFrentef.png");
@@ -123,7 +125,7 @@ public class FinalScreen implements Screen {
         BM = new Texture[3];
         BM[0] = new Texture("Inimigos/BrunoBase.png");
         BM[1] = new Texture("Personagens/Peladinho.png");
-        BM[2] = new Texture("Personagens/Gemini_Generated_Image_ehxmqeehxmqeehxm.png");
+        BM[2] = new Texture("Inimigos/Nameless King Base.png");
         //Musicas
         TCRMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/TCRMusic.mp3")); //Mudar aqui dps
         TCRMusic.setLooping(true);
@@ -133,10 +135,11 @@ public class FinalScreen implements Screen {
         MusicaTriste.setLooping(true);
         CoroacaoMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/Coroação.mp3"));
         CoroacaoMusic.setLooping(true);
+        creditosMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/Creditos.mp3"));
         //Falas
-        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
+        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parametro.size = 38; //O tamanho da fonte
+        parametro.size = 30; //O tamanho da fonte
         parametro.color = Color.WHITE; //A cor da fonte
         parametro.borderWidth = 3; // Colocar a borda
         parametro.borderColor = Color.BLACK; //Cor da borda
@@ -149,6 +152,10 @@ public class FinalScreen implements Screen {
             falaIndice = 0;
             exibindoDialogo = true;
             cenarioAtual = 2;
+        }
+        if (estadoHistoria == 5) {
+            falaIndice = 0;
+            exibindoDialogo = true;
         }
     }
 
@@ -189,12 +196,18 @@ public class FinalScreen implements Screen {
             batch.draw(enioAtual, x, y, 128, 128);
         } else if (estadoHistoria == 3 && falaIndice <= 8) {
             enioAgora = enioParado;
-            batch.draw(enioAgora, 500, 300, 300, 300);
-            batch.draw(BM[0], 1000, 300, 300, 300);
+            batch.draw(enioAgora, 500, 300, 200, 200);
+            batch.draw(BM[0], 1000, 300, 350, 350);
         } else if (estadoHistoria == 3 && falaIndice >= 8) {
             enioAgora = enioParado;
-            batch.draw(enioAgora, 500, 300, 300, 300);
-            batch.draw(BM[1], 1000, 300, 300, 300);
+            batch.draw(enioAgora, 500, 300, 200, 200);
+            batch.draw(BM[1], 1000, 300, 350, 350);
+        } else if (estadoHistoria == 5 && falaIndice >= 0 && falaIndice <= 7) {
+            enioAgora = enioParado;
+            batch.draw(enioAgora, 500, 300, 200, 200);
+            batch.draw(BM[2], 1000, 300, 350, 350);
+        } else if (estadoHistoria == 5 && falaIndice >= 10) {
+            cenarioAtual = 3;
         }
     }
 
@@ -314,6 +327,13 @@ public class FinalScreen implements Screen {
         } else if (estadoHistoria == 5 && falaIndice >= 10) {
             CoroacaoMusic.play();
             MusicaTriste.stop();
+        } else if (estadoHistoria == 6) {
+            cenarioAtual = 4;
+            creditosMusic.play();
+            TCRMusic.stop();
+            BrunoMusic.stop();
+            MusicaTriste.stop();
+            CoroacaoMusic.stop();
         } else {
             TCRMusic.stop();
             BrunoMusic.stop();
@@ -345,10 +365,10 @@ public class FinalScreen implements Screen {
                         fonte.setColor(Color.BROWN);
                     } else if (nome.equals("Narrador")) {
                         fonte.setColor(Color.CYAN);
-                        /**} else if (nome.equals("Bandido Paripe")) {
-                         fonte.setColor(Color.DARK_GRAY);*/
-                    } else {
+                    } else if (nome.equals("Bruno Magrileno")) {
                         fonte.setColor(Color.YELLOW);
+                    } else if (nome.equals("Nameless King")) {
+                        fonte.setColor(Color.NAVY);
                     }
                     fonte.draw(batch, nome + ":", 220, 260);
                     fonte.setColor(Color.WHITE);
@@ -383,7 +403,23 @@ public class FinalScreen implements Screen {
 
     @Override
     public void dispose() {
+        batch.dispose();
+        caxaDialogo.dispose();
+        enioParado.dispose();
+        enioGordo.dispose();
+        for (Texture t : backgroundFinal) t.dispose();
+        for (Texture t : enioFrente) t.dispose();
+        for (Texture t : enioCosta) t.dispose();
+        for (Texture t : eniolado1) t.dispose();
+        for (Texture t : eniolado2) t.dispose();
+        for (Texture t : BM) t.dispose();
 
+        TCRMusic.dispose();
+        BrunoMusic.dispose();
+        MusicaTriste.dispose();
+        CoroacaoMusic.dispose();
+        creditosMusic.dispose();
+        fonte.dispose();
     }
 
     public int getEstadoHistoria() {

@@ -99,9 +99,9 @@ public class NegrolinosScreen implements Screen {
         MusicaTriste.setLooping(true);
         comendo = Gdx.audio.newMusic(Gdx.files.internal("Sound/Comendo.mp3"));
         //Falas
-        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
+        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parametro.size = 38; //O tamanho da fonte
+        parametro.size = 30; //O tamanho da fonte
         parametro.color = Color.WHITE; //A cor da fonte
         parametro.borderWidth = 3; // Colocar a borda
         parametro.borderColor = Color.BLACK; //Cor da borda
@@ -172,7 +172,8 @@ public class NegrolinosScreen implements Screen {
                 } else if (estadoHistoria == 3) {
                     estadoHistoria = 4;
                     Main game = (Main) Gdx.app.getApplicationListener();
-                    game.finalScreen = new FinalScreen();
+                    game.dialogueScreen.setEstadoHistoria(6);
+                    game.setScreen(game.dialogueScreen);
                 }
             }
         }
@@ -263,7 +264,38 @@ public class NegrolinosScreen implements Screen {
 
     @Override
     public void dispose() {
+        // 1. Renderizador e Fonte
+        if (batch != null) batch.dispose();
+        if (fonte != null) fonte.dispose();
 
+        // 2. Texturas Individuais (Enio, Gonçalam, Itens)
+        if (caxaDialogo != null) caxaDialogo.dispose();
+        if (enio != null) enio.dispose();
+        if (Goncalam != null) Goncalam.dispose();
+        if (beijo != null) beijo.dispose();
+        if (banana != null) banana.dispose();
+        if (enioComendo != null) enioComendo.dispose();
+
+        // 3. Array de Backgrounds (Limpando as 7 imagens)
+        if (backgroundNegrolinos != null) {
+            for (Texture t : backgroundNegrolinos) {
+                if (t != null) t.dispose();
+            }
+        }
+
+        // 4. Músicas
+        if (NegrolinosMusic != null) {
+            NegrolinosMusic.stop();
+            NegrolinosMusic.dispose();
+        }
+        if (MusicaTriste != null) {
+            MusicaTriste.stop();
+            MusicaTriste.dispose();
+        }
+        if (comendo != null) {
+            comendo.stop();
+            comendo.dispose();
+        }
     }
 
     public int getEstadoHistoria() {

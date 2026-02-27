@@ -98,9 +98,9 @@ public class DialogueScreen implements Screen {
         casaEnio = new Texture("Backgrounds/casaEnio.png");
         caxaDialogo = new Texture("UI/caixaDialogo.png");
         //Configurações de Fonte
-        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
+        FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parametro.size = 38; //O tamanho da fonte
+        parametro.size = 30; //O tamanho da fonte
         parametro.color = Color.WHITE; //A cor da fonte
         parametro.borderWidth = 3; // Colocar a borda
         parametro.borderColor = Color.BLACK; //Cor da borda
@@ -116,6 +116,9 @@ public class DialogueScreen implements Screen {
         viewport = new FitViewport(1920, 1080, camera);
         viewport.apply();
         falaAtualNum = 0;
+        if (estadoHistoria == 6){
+            game.setScreen(new FinalScreen());
+        }
 
         //Para faer o Save Automatico
         salvarProgesso();

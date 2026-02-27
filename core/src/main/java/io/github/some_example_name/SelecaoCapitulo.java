@@ -161,32 +161,26 @@ public class SelecaoCapitulo implements Screen {
                 switch (opcao) {
                     case 3: //TCR
                         musicMenu.stop(); // PARA A MÚSICA
-                        musicMenu.dispose();
                         game.setScreen(new TCRScreen());
                         break;
                     case 4: //Madoka
                         musicMenu.stop(); // PARA A MÚSICA
-                        musicMenu.dispose();
                         game.setScreen(new MadokaScreen());
                         break;
                     case 5: //Arabianos
                         musicMenu.stop(); // PARA A MÚSICA
-                        musicMenu.dispose();
                         game.setScreen(new ArabianosScreen());
                         break;
                     case 6: //UFBA
                         musicMenu.stop();
-                        musicMenu.dispose();
                         game.setScreen(new UFBAScreen());
                         break;
                     case 7: //Negrolinos
                         musicMenu.stop();
-                        musicMenu.dispose();
                         game.setScreen(new NegrolinosScreen());
                         break;
                     case 8: //Final Screen
-                        musicMenu.stop();
-                        musicMenu.dispose();
+                        musicMenu.stop();;
                         game.setScreen(new FinalScreen());
                         break;
                     case 9:
@@ -265,9 +259,16 @@ public class SelecaoCapitulo implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
-        fonte.dispose();
-        background.dispose();
-        musicMenu.dispose();
+        // Limpa o renderizador e as fontes
+        if (batch != null) batch.dispose();
+        if (fonte != null) fonte.dispose();
+
+        // Limpa a imagem de fundo
+        if (background != null) background.dispose();
+
+        // Limpa as músicas (Essencial!)
+        if (musicMenu != null) musicMenu.dispose();
+        if (tecla != null) tecla.dispose();
+        if (enter != null) enter.dispose();
     }
 }
