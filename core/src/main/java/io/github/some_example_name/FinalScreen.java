@@ -245,14 +245,14 @@ public class FinalScreen implements Screen {
 
         //Pra não deixar ela sair pelo ceu ou por baixo
 
-        if (estadoHistoria == 1) {
+        if (estadoHistoria == 0) {
             float limiteYAtual = 350;
             if (x < 550) {
-                limiteYAtual = 180;
-            } else if (x > 1250) {
+                limiteYAtual = 240;
+            } else if (x > 1200) {
                 limiteYAtual = 180;
             } else {
-                limiteYAtual = 140;
+                limiteYAtual = 240;
             }
             if (y > limiteYAtual) {
                 y = limiteYAtual;
@@ -278,7 +278,6 @@ public class FinalScreen implements Screen {
                     exibindoDialogo = false;
                     falaIndice = 0;
 
-                    // Se acabou a conversa da loja, ele ganha a missão e pode ir pro castelo
                     if (estadoHistoria == 1) {
                         estadoHistoria = 2;
                         Main game = (Main) Gdx.app.getApplicationListener();
@@ -294,6 +293,7 @@ public class FinalScreen implements Screen {
                             game.combatScreen = new CombatScreen();
                         }
                         game.combatScreen.setLutaAtual(10);
+                        game.setScreen(game.combatScreen);
                     } else if (estadoHistoria == 5) {
                         estadoHistoria = 6;
                         //FIM DE JOGO, DEPOIS EU FAÇO UMA TELA DE CREDITOS

@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class UFBAScreen implements Screen {
-    private Texture caxaDialogo;
+    private Texture caxaDialogo, EnioComendo;
     private Texture[] backgroundUFBA;
     private SpriteBatch batch;
     private Music UFBAMusic, MusicaTriste;
@@ -64,8 +64,8 @@ public class UFBAScreen implements Screen {
         "Paulo Freire: Hahaha o meu metodo de ensino é o melhor.",
         "Paulo Freire: Muito bem, você conseguiu, tome essa ficha e espere um pouco",
         "Narrador: 30 minutos depois.",
-        "Paulo Freire: Aqui está coma.",
-        "Enio: Hm, pior que é gostoso.",
+        "Paulo Freire: Aqui está coma.", //7
+        "Enio: Hm, pior que é gostoso.", // 8
         "Paulo Freire: Eu sei muito bem quem é você.",
         "Paulo Freire: Você é o guerreiro que tem ido de Reino em Reino comendo as melhores comidas pra virar Rei.",
         "Enio: Como você sabe disso?",
@@ -92,6 +92,7 @@ public class UFBAScreen implements Screen {
         backgroundUFBA[1] = new Texture("Backgrounds/DentroPaf1.png"); // PAF1
         backgroundUFBA[2] = new Texture("Backgrounds/Paf3.png"); // PAF3
         backgroundUFBA[3] = new Texture("Backgrounds/DentroPaf3.png"); // PAF3 Dentro
+        EnioComendo = new Texture("Enio/EnioRU.png");
         //Musicas
         UFBAMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/UFBAMusic.mp3")); //Mudar aqui dps
         UFBAMusic.setLooping(true);
@@ -128,13 +129,9 @@ public class UFBAScreen implements Screen {
         // Desenha o fundo baseado no cenário que ele está
         batch.draw(backgroundUFBA[cenarioAtual], 0, 0, 1920, 1080);
 
-        /*if (estadoHistoria == 0 || estadoHistoria == 1 || estadoHistoria == 2) {
-            batch.draw(enioAtual, x, y, 128, 128);
-        } else if (estadoHistoria == 3) {
-            batch.draw(enioAtual, 910, 300, 128, 128);
-        } else if (estadoHistoria == 4) {
-            batch.draw(enioAtual, 920, 300, 128, 128);
-        }*/
+        if (estadoHistoria == 6 && falaIndice >= 7 && falaIndice <= 8){
+            batch.draw(EnioComendo, 860, 440, 600, 600);
+        }
 
         if (exibindoDialogo) {
             desenharCaixaDialogo();
@@ -170,7 +167,6 @@ public class UFBAScreen implements Screen {
                         game.combatScreen.setLutaAtual(6);
                         game.setScreen(game.combatScreen);
                     } else if (estadoHistoria == 4) {
-                        System.out.println("DEBUG");
                         estadoHistoria = 5;
                         Main game = (Main) Gdx.app.getApplicationListener();
                         if (game.combatScreen == null) {
@@ -233,10 +229,8 @@ public class UFBAScreen implements Screen {
                         fonte.setColor(Color.BROWN);
                     } else if (nome.equals("Narrador")) {
                         fonte.setColor(Color.CYAN);
-                        /**} else if (nome.equals("Bandido Paripe")) {
-                         fonte.setColor(Color.DARK_GRAY);*/
-                    } else {
-                        fonte.setColor(Color.YELLOW);
+                    } else if (nome.equals("Paulo Freire")) {
+                        fonte.setColor(Color.SLATE);
                     }
                     fonte.draw(batch, nome + ":", 220, 260);
                     fonte.setColor(Color.WHITE);

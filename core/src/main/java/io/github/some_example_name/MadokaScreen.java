@@ -15,10 +15,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 
 public class MadokaScreen implements Screen {
-    private Texture enioAtual, caxaDialogo;
+    private Texture enioAtual, caxaDialogo, enioComendo;
     private Texture[] eniolado1, eniolado2, enioCosta, enioFrente, backgroundMadoka;
     private SpriteBatch batch;
-    private Music MadokaMusic, lojaMusic;
+    private Music MadokaMusic, lojaMusic, comendo;
     private float x = 100, y = 100;
     private float velocidade = 200;
     private float tempoAnimacao = 0;
@@ -78,7 +78,7 @@ public class MadokaScreen implements Screen {
         "Lucos: Soube que você derrotou os bandidos, e até conseguiu quebrar o controle do Dragão.",
         "Lucos: Você é realmente muito forte, interessante.",
         "Tabajaro: Mas isso não vem ao caso agora, está na hora de você receber sua recompensa.",
-        "Tabajaro: Aqui, cachorro flambado feito da melhor forma possivel.",
+        "Tabajaro: Aqui, cachorro flambado feito da melhor forma possivel.", //4
         "Enio: Caramba finalmente, que delicia.",
         "Narrador: Depois disso o nosso guerreiro volta para sua casa, pra o seu descanso do heroi.",
     };
@@ -112,11 +112,13 @@ public class MadokaScreen implements Screen {
         eniolado2[1] = new Texture("Enio/Eniolado2,2.png");
         eniolado2[2] = new Texture("Enio/Enioladol1.png");
         enioAtual = enioFrente[frameAtual];
+        enioComendo= new Texture("Enio/EnioComendo.png");
         //Musicas
         MadokaMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/MadokaMusic.mp3")); //Mudar aqui dps
         MadokaMusic.setLooping(true);
         lojaMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/Lojas.mp3"));
         lojaMusic.setLooping(true);
+        comendo = Gdx.audio.newMusic(Gdx.files.internal("Sound/comendo.mp3"));
         //Falas
         FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -157,6 +159,9 @@ public class MadokaScreen implements Screen {
             batch.draw(enioAtual, 910, 300, 128, 128);
         } else if (estadoHistoria == 4) {
             batch.draw(enioAtual, 920, 300, 128, 128);
+        } else if (estadoHistoria == 8 && falaIndice >= 4){
+            batch.draw(enioComendo, 920, 300, 600, 600);
+            comendo.play();
         }
 
         if (exibindoDialogo) {
@@ -320,10 +325,14 @@ public class MadokaScreen implements Screen {
                         fonte.setColor(Color.BROWN);
                     } else if (nome.equals("Narrador")) {
                         fonte.setColor(Color.CYAN);
-                        /**} else if (nome.equals("Bandido Paripe")) {
-                         fonte.setColor(Color.DARK_GRAY);*/
-                    } else {
+                    } else if (nome.equals("Lojista")){
                         fonte.setColor(Color.YELLOW);
+                    } else if (nome.equals("Lucos")){
+                        fonte.setColor(Color.PURPLE);
+                    } else if (nome.equals("Tabajaro")){
+                        fonte.setColor(Color.PINK);
+                    } else if (nome.equals("Bandidos")){
+                        fonte.setColor(Color.FIREBRICK);
                     }
                     fonte.draw(batch, nome + ":", 220, 260);
                     fonte.setColor(Color.WHITE);

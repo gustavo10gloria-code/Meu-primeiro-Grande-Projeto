@@ -15,10 +15,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 
 public class TCRScreen implements Screen {
-    private Texture backgroundTCR, enioAtual, caxaDialogo;
+    private Texture backgroundTCR, enioAtual, caxaDialogo, chocholate, enioComendo;
     private Texture[] eniolado1, eniolado2, enioCosta, enioFrente;
     private SpriteBatch batch;
-    private Music TCRMusic, lojaMusic;
+    private Music TCRMusic, lojaMusic, comendo;
     private float x = 100, y = 100;
     private float velocidade = 200;
     private float tempoAnimacao = 0;
@@ -50,7 +50,7 @@ public class TCRScreen implements Screen {
     private String[] falasFinais = {
       "Enio: Pronto, finalmente posso comprar meu chocolate.",
       "Enio: Me dá um ai lojista.",
-      "Lojista: Vou te dar um Gonçalo, mas vai ser por conta da casa, por vc ter dado uma nesse bandido",
+      "Lojista: Vou te dar um Gonçalo, mas vai ser por conta da casa, por vc ter dado uma nesse bandido", //2
       "Enio: Caramba muito obrigado.",
       "Narrador: Então nosso jovem guereirro come o chocolate e sente o seu poder aumentando.", //5
       "Enio: Ai nossa Gonçalo é uma delicia mesmo.",
@@ -83,11 +83,15 @@ public class TCRScreen implements Screen {
         eniolado2[1] = new Texture("Enio/Eniolado2,2.png");
         eniolado2[2] = new Texture("Enio/Enioladol1.png");
         enioAtual = enioFrente[frameAtual];
+        chocholate = new Texture("itens/Gonçalo.png");
+        enioComendo = new Texture("Enio/EnioComendoGonçalo.png");
         //Musicas
         TCRMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/TCRMusic.mp3"));
         TCRMusic.setLooping(true);
         lojaMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/Lojas.mp3"));
         lojaMusic.setLooping(true);
+        comendo = Gdx.audio.newMusic(Gdx.files.internal("Sound/Comendo.mp3"));
+        comendo.setVolume(100);
 
         //Falas
         FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
@@ -206,7 +210,16 @@ public class TCRScreen implements Screen {
         ScreenUtils.clear(0f, 0f, 0f, 1f);
         batch.begin();
         batch.draw(backgroundTCR, 0, 0, 1920, 1080);
-        batch.draw(enioAtual, x, y, 128, 128);
+        if (estadoHistoria == 0 || estadoHistoria == 2){
+            batch.draw(enioFrente[0], 400, 100, 128, 128);
+        } else if (estadoHistoria == 1){
+        batch.draw(enioAtual, x, y, 128, 128);}
+        if (estadoHistoria == 3 && falaIndice >= 2 && falaIndice < 5){
+            batch.draw(chocholate, 780, 300, 600, 600);
+        } else if (estadoHistoria == 3 && falaIndice >= 5) {
+            batch.draw(enioComendo, 780, 300, 600, 600);
+            comendo.play();
+        }
         //Todas as configurações de diálogo
         if (exibindoDialogo) {
             batch.draw(caxaDialogo, 160, 40, 1600, 250);

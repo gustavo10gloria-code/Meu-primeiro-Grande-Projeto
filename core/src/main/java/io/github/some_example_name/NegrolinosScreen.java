@@ -14,10 +14,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class NegrolinosScreen implements Screen {
-    private Texture caxaDialogo, enio, Goncalam;
+    private Texture caxaDialogo, enio, Goncalam, beijo, enioComendo, banana;
     private Texture[] backgroundNegrolinos;
     private SpriteBatch batch;
-    private Music NegrolinosMusic, MusicaTriste;
+    private Music NegrolinosMusic, MusicaTriste, comendo;
     private OrthographicCamera camera;
     private FitViewport viewport;
     //Estados da História na Negrolinos
@@ -37,8 +37,8 @@ public class NegrolinosScreen implements Screen {
         "Narrador: Chegando lá ele encontra um homem bonito e formoso.",
         "Gonçalam: Ola Enio, bem vindo ao reino dos Negrolinos, tá aqui a Banana Flambada.",
         "Enio: Imagino que tenham falado de mim, mas você vai me dar tão facil assim?",
-        "Gonçalam: Coma, eu só quero conversar por enquanto.",
-        "Enio: Ok.",
+        "Gonçalam: Coma, eu só quero conversar por enquanto.", //5
+        "Enio: Ok.", //6
         "Gonçalam: Você comeu as 5 melhores comidas do reino, você finalmente conseguiu, mas eu sei que você tem duvidas.",
         "Gonçalam: Do que aconteceu com a Madoka e a UFBA.",
         "Gonçalam: Eu era um dos Magic Quintet, o mais forte deles. Nois 5 fundamos o Reino da Madoka quando ainda era tudo mato", //9 --
@@ -66,7 +66,7 @@ public class NegrolinosScreen implements Screen {
         "Enio: Como que eu vou vencer DELES? Eu não sou tão forte",
         "Gonçalam: Enio, a sua força de vontade é mais forte que todos, volte para TCR, vire o rei, e agora vamos juntar os 5 Reinos.",
         "Gonçalam: Para derrotar ELES, vamos nos preparar tambem, foram decadas e decadas vivendo escondidos, está na hora de vencermos.",
-        "Enio: Obrigado por me contar tudo, agora eu tenho um assunto pra resolver na TCR.",
+        "Enio: Obrigado por me contar tudo, agora eu tenho um assunto pra resolver na TCR.", //16
         "Enio: ESTÁ NA HORA DE ME TORNAR REI.",
     };
     private int falaIndice = 0;
@@ -89,11 +89,15 @@ public class NegrolinosScreen implements Screen {
         backgroundNegrolinos[6] = new Texture("Backgrounds/NegrolinosFight.png");
         enio = new Texture("Enio/Enio.png");
         Goncalam = new Texture("Inimigos/GonçaloBase.png");
+        beijo = new Texture("Enio/Beijo.png");
+        banana = new Texture("Itens/BananaFlambada.png");
+        enioComendo = new Texture("Enio/EnioBanana.png");
         //Musicas
         NegrolinosMusic = Gdx.audio.newMusic(Gdx.files.internal("Sound/NegrolinosMusic.mp3")); //Mudar aqui dps
         NegrolinosMusic.setLooping(true);
         MusicaTriste = Gdx.audio.newMusic(Gdx.files.internal("Sound/MusicaTristeNegrolinos.mp3"));
         MusicaTriste.setLooping(true);
+        comendo = Gdx.audio.newMusic(Gdx.files.internal("Sound/Comendo.mp3"));
         //Falas
         FreeTypeFontGenerator gerador = new FreeTypeFontGenerator(Gdx.files.internal("Fontes/PixelifySans.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parametro = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -124,9 +128,16 @@ public class NegrolinosScreen implements Screen {
 
         // Desenha o fundo baseado no cenário que ele está
         batch.draw(backgroundNegrolinos[cenarioAtual], 0, 0, 1920, 1080);
-        if (cenarioAtual == 6){
+        if (cenarioAtual == 6 && falaIndice < 16){
             batch.draw(enio, 250, 200, 300, 300);
             batch.draw(Goncalam, 1050, 200, 600, 600);
+        } else if (cenarioAtual == 6 && falaIndice >= 16){
+            batch.draw(beijo, 660, 240, 600, 600);
+        } else if (cenarioAtual == 1 && falaIndice == 5){
+            batch.draw(banana, 660, 240, 600, 600);
+        } else if (cenarioAtual == 1 && falaIndice == 6) {
+            batch.draw(enioComendo, 660, 240, 600, 600);
+            comendo.play();
         }
 
         if (exibindoDialogo) {
@@ -161,8 +172,7 @@ public class NegrolinosScreen implements Screen {
                 } else if (estadoHistoria == 3) {
                     estadoHistoria = 4;
                     Main game = (Main) Gdx.app.getApplicationListener();
-                    game.dialogueScreen.setEstadoHistoria(6);
-                    game.setScreen(game.dialogueScreen);
+                    game.finalScreen = new FinalScreen();
                 }
             }
         }
@@ -218,10 +228,8 @@ public class NegrolinosScreen implements Screen {
                         fonte.setColor(Color.BROWN);
                     } else if (nome.equals("Narrador")) {
                         fonte.setColor(Color.CYAN);
-                        /**} else if (nome.equals("Bandido Paripe")) {
-                         fonte.setColor(Color.DARK_GRAY);*/
-                    } else {
-                        fonte.setColor(Color.YELLOW);
+                    } else if (nome.equals("Gonçalam")){
+                        fonte.setColor(Color.ROYAL);
                     }
                     fonte.draw(batch, nome + ":", 220, 210);
                     fonte.setColor(Color.WHITE);

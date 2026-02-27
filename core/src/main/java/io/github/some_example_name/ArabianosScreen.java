@@ -208,10 +208,8 @@ public class ArabianosScreen implements Screen {
                         fonte.setColor(Color.BROWN);
                     } else if (nome.equals("Narrador")) {
                         fonte.setColor(Color.CYAN);
-                        /**} else if (nome.equals("Bandido Paripe")) {
-                         fonte.setColor(Color.DARK_GRAY);*/
-                    } else {
-                        fonte.setColor(Color.YELLOW);
+                    } else if (nome.equals("Taboco")) {
+                        fonte.setColor(Color.MAGENTA);
                     }
                     fonte.draw(batch, nome + ":", 220, 210);
                     fonte.setColor(Color.WHITE);

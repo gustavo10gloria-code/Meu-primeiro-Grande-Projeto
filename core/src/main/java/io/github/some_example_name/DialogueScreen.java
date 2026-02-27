@@ -54,7 +54,7 @@ public class DialogueScreen implements Screen {
             "Enio: Vou pro reino vizinho da Madoka, hm deixa eu ver aqui qual é a comida de lá.",
             "Enio: Oxe porra.",
             "Enio: Cachorro flambado?",
-            "Esposa Enio: Sim meu amor, é uma iguaria, mas são poucas pessoas que são autorizadas a comer isso",
+            "Esposa: Sim meu amor, é uma iguaria, mas são poucas pessoas que são autorizadas a comer isso",
             "Enio: Tá bom né, vou ter que passar por essa.",
             "Narrador: Então nosso gordinho se prepara para no dia seguinte ir para a Madoka.",
         };
@@ -115,6 +115,7 @@ public class DialogueScreen implements Screen {
         camera = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080, camera);
         viewport.apply();
+        falaAtualNum = 0;
 
         //Para faer o Save Automatico
         salvarProgesso();
@@ -168,7 +169,7 @@ public class DialogueScreen implements Screen {
                 fonte.setColor(Color.GOLD);
             } else if (nome.equals("Jornal")) {
                 fonte.setColor(Color.FIREBRICK);
-            } else if (nome.equals("Esposa Enio")) {
+            } else if (nome.equals("Esposa")) {
                 fonte.setColor(Color.BLUE);
             } else {
                 fonte.setColor(Color.CYAN);
